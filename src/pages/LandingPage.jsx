@@ -19,7 +19,14 @@ import {
   Wrench,
   BarChart3,
   Handshake,
-  Hammer
+  Hammer,
+  DollarSign,
+  TrendingDown,
+  Check,
+  MapPin,
+  Activity,
+  ArrowUpRight,
+  Globe
 } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -92,8 +99,64 @@ function FeatureCard({ icon: Icon, title, description, iconBgClass, delay }) {
   );
 }
 
+const slides = [
+  {
+    title: "Heavy Equipment Procurement",
+    description: "Heavy machinery and production plant loading operations.",
+    img: "https://images.unsplash.com/photo-1541625602330-2277a4c46182?auto=format&fit=crop&w=1000&q=80",
+    category: "Heavy Machinery"
+  },
+  {
+    title: "Global Logistics & Freight Solutions",
+    description: "Mass scale maritime containers at a cargo port.",
+    img: "https://images.unsplash.com/photo-1578575437130-527eed3abbec?auto=format&fit=crop&w=1000&q=80",
+    category: "Shipping & Logistics"
+  },
+  {
+    title: "Inventory & Supply Chain Management",
+    description: "Secured enterprise supply-chain and warehousing operations.",
+    img: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&w=1000&q=80",
+    category: "Warehousing"
+  },
+  {
+    title: "Vendor Qualification & Quality Assurance",
+    description: "Rigorous ISO audits by tier-one engineers inspecting equipment.",
+    img: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1000&q=80",
+    category: "Industrial Equipment"
+  },
+  {
+    title: "End-to-End Procurement Services",
+    description: "Seamless global freight vessel cargo delivery.",
+    img: "https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?auto=format&fit=crop&w=1000&q=80",
+    category: "Global Sourcing"
+  }
+];
+
 export default function LandingPage() {
   const navigate = useNavigate();
+  const [carouselIndex, setCarouselIndex] = useState(0);
+  const timerRef = useRef(null);
+
+  const resetTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+    timerRef.current = setInterval(() => {
+      setCarouselIndex((prev) => (prev + 1) % slides.length);
+    }, 4500);
+  };
+
+  useEffect(() => {
+    resetTimer();
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, []);
+
+  const handleSelectSlide = (idx) => {
+    setCarouselIndex(idx);
+    resetTimer();
+  };
   
   // Create refs/controls/variants for scroll animated sections
   const statsAnimation = useScrollAnimation();
@@ -118,180 +181,193 @@ export default function LandingPage() {
       {/* SECTION 1 — HERO */}
       <section 
         id="home" 
-        className="relative min-h-[90vh] flex flex-col items-center justify-center pt-32 sm:pt-40 pb-20 px-6 lg:px-12 overflow-hidden bg-gradient-to-br from-[#1B2A4A] via-[#1e3a6e] to-[#0d5060]"
+        className="relative min-h-screen flex flex-col items-center justify-center pt-28 pb-16 lg:py-24 px-4 sm:px-6 lg:px-12 overflow-hidden bg-gradient-to-br from-[#0B1528] via-[#121F38] to-[#0A111F]"
       >
         {/* Animated Gradient Orbs background layer */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 rounded-full bg-[#5DC840]/10 blur-[130px] z-[1] pointer-events-none animate-pulse duration-[8000ms]" />
-        <div className="absolute bottom-1/4 right-1/4 w-[450px] h-[450px] rounded-full bg-[#29B8C8]/10 blur-[150px] z-[1] pointer-events-none animate-pulse duration-[10000ms]" />
+        <div className="absolute top-1/6 left-1/10 w-[500px] h-[500px] rounded-full bg-[#5DC840]/5 blur-[140px] z-[1] pointer-events-none animate-pulse duration-[10000ms]" />
+        <div className="absolute bottom-1/6 right-1/10 w-[600px] h-[600px] rounded-full bg-[#29B8C8]/5 blur-[160px] z-[1] pointer-events-none animate-pulse duration-[12000ms]" />
 
-        {/* Semi-transparent background image of high-performance components */}
+        {/* Semi-transparent pattern grid */}
+        <div className="absolute inset-0 pointer-events-none opacity-[0.03] z-[2]" 
+          style={{ backgroundImage: 'radial-gradient(ellipse at center, #ffffff 1px, transparent 1px)', backgroundSize: '24px 24px' }} 
+        />        {/* Subtle background world map network */}
         <div className="absolute inset-0 pointer-events-none select-none overflow-hidden z-[2]">
           <img 
-            src="https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1920&q=80" 
-            alt="Mechanical background" 
-            className="w-full h-full object-cover opacity-15 mix-blend-overlay filter brightness-110 contrast-110"
+            src="https://images.unsplash.com/photo-1589519160732-57fc498494f8?auto=format&fit=crop&w=1920&q=80" 
+            alt="Global Sourcing Network" 
+            className="w-full h-full object-cover opacity-[0.05] mix-blend-overlay filter brightness-75 contrast-125"
             referrerPolicy="no-referrer"
           />
         </div>
 
-        <div className="max-w-4xl mx-auto w-full text-center relative z-10 py-8 sm:py-12 space-y-8">
-          
-          {/* Messaging and CTAs */}
-          <div className="space-y-6">
-            <motion.h1 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.1 }}
-              className="font-heading font-extrabold text-5xl md:text-6xl text-white leading-[1.08] tracking-tight"
-            >
-              Your Single Source <br />
-              <span className="text-[#5DC840]">Procurement</span> <br />
-              Solution.
-            </motion.h1>
+        <div className="max-w-7xl mx-auto w-full relative z-10 py-6 sm:py-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            
+            {/* LEFT COLUMN: Premium Headlines, CTAs, and Enterprise Trust */}
+            <div className="lg:col-span-5 text-left flex flex-col space-y-8">
+              
+              {/* Premium Category Pill */}
+              <div className="inline-flex">
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-4 py-1.5 text-xs font-mono font-bold text-slate-300">
+                  <span className="h-2 w-2 rounded-full bg-[#5DC840] animate-ping" />
+                  <span>🌍 GLOBAL PROCUREMENT NETWORK</span>
+                </div>
+              </div>
 
-            <motion.p 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
-              className="text-white/70 text-base sm:text-lg leading-relaxed max-w-2xl mx-auto font-normal"
-            >
-              From sourcing to delivery, Global Goods &amp; Services provides complete end-to-end procurement for businesses across Africa and Europe. 20+ years of experience. 20,000+ vendors worldwide.
-            </motion.p>
+              {/* Bold Headline */}
+              <div className="space-y-4">
+                <motion.h1 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.1 }}
+                  className="font-heading font-black text-4xl sm:text-5xl lg:text-6xl text-white leading-[1.1] tracking-tight"
+                >
+                  Global Procurement.<br />
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#5DC840] to-[#29B8C8]">
+                    Simplified.
+                  </span>
+                </motion.h1>
 
-            <motion.div 
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
-              className="flex flex-col sm:flex-row gap-4 pt-4 justify-center"
-            >
-              <button 
-                onClick={() => navigate('/inquiry')}
-                className="text-sm font-bold text-white bg-gradient-to-r from-[#5DC840] to-[#29B8C8] hover:shadow-lg hover:shadow-[#29B8C8]/10 hover:brightness-105 active:scale-[0.98] py-4 px-8 rounded-full transition-all"
-                id="hero-primary-btn"
+                {/* Subheading */}
+                <motion.p 
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.2 }}
+                  className="text-white/75 text-sm sm:text-[15px] leading-relaxed max-w-xl font-normal"
+                >
+                  Source products worldwide through a trusted network of suppliers and logistics partners.
+                </motion.p>
+              </div>
+
+              {/* CTAs */}
+              <motion.div 
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.3 }}
+                className="flex flex-col sm:flex-row gap-3.5 pt-2"
               >
-                Submit an RFQ &rarr;
-              </button>
-              <a 
-                href="#features"
-                onClick={(e) => handleScrollTo(e, '#features')}
-                className="text-sm font-semibold text-white bg-white/5 border border-white/25 hover:bg-white/10 py-4 px-8 rounded-full text-center transition-all flex items-center justify-center gap-1.5 animate-pulse"
-                id="hero-secondary-btn"
-              >
-                Our Services &darr;
-              </a>
-            </motion.div>
+                <button 
+                  onClick={() => navigate('/inquiry')}
+                  className="text-xs sm:text-sm font-bold text-slate-950 bg-gradient-to-r from-[#5DC840] to-[#29B8C8] hover:shadow-lg hover:shadow-[#29B8C8]/25 hover:brightness-110 active:scale-[0.98] py-4 px-8 rounded-full transition-all inline-flex items-center justify-center gap-2"
+                  id="hero-primary-btn"
+                >
+                  <span>Submit an RFQ</span>
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+                <a 
+                  href="#features"
+                  onClick={(e) => handleScrollTo(e, '#features')}
+                  className="text-xs sm:text-sm font-semibold text-white bg-white/5 border border-white/15 hover:bg-white/10 hover:border-white/30 py-4 px-8 rounded-full text-center transition-all inline-flex items-center justify-center gap-1.5"
+                  id="hero-secondary-btn"
+                >
+                  <span>Our Services</span>
+                </a>
+              </motion.div>
+
+
+
+            </div>
+
+            {/* RIGHT COLUMN: Redesigned Apple-Style Stacked Photo Carousel */}
+            <div className="lg:col-span-7 w-full flex flex-col space-y-6 lg:pl-6 pb-2">
+              <div className="relative h-[330px] sm:h-[390px] md:h-[420px] w-full flex items-center justify-center select-none pt-2">
+                
+                {/* Third Image Card (Background Left) */}
+                <div 
+                  className="absolute w-[80%] h-[82%] rounded-3xl overflow-hidden shadow-2xl transition-all duration-700 ease-in-out transform opacity-30 origin-bottom border border-white/10 filter blur-[1px]"
+                  style={{
+                    transform: 'translateY(16px) rotate(-6deg) scale(0.9)',
+                    zIndex: 10
+                  }}
+                >
+                  <img src={slides[(carouselIndex + 2) % slides.length].img} className="w-full h-full object-cover" alt="Sourcing map stack 3" />
+                  <div className="absolute inset-0 bg-[#0B1528]/15" />
+                </div>
+
+                {/* Second Image Card (Middle Right) */}
+                <div 
+                  className="absolute w-[86%] h-[88%] rounded-3xl overflow-hidden shadow-2xl transition-all duration-700 ease-in-out transform opacity-60 origin-bottom border border-white/15 filter blur-[0.5px]"
+                  style={{
+                    transform: 'translateY(10px) rotate(4deg) scale(0.95)',
+                    zIndex: 20
+                  }}
+                >
+                  <img src={slides[(carouselIndex + 1) % slides.length].img} className="w-full h-full object-cover" alt="Sourcing map stack 2" />
+                  <div className="absolute inset-0 bg-[#0B1528]/10" />
+                </div>
+
+                {/* Top Interactive Main Card */}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={carouselIndex}
+                    initial={{ opacity: 0, scale: 0.9, y: 15 }}
+                    animate={{ 
+                      opacity: 1, 
+                      scale: 1, 
+                      y: [0, -8, 0],
+                    }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{
+                      y: {
+                        repeat: Infinity,
+                        duration: 6,
+                        ease: "easeInOut"
+                      },
+                      default: { duration: 0.5 }
+                    }}
+                    className="absolute w-full h-[95%] rounded-3xl overflow-hidden shadow-[0_25px_50px_-12px_rgba(0,0,0,0.6)] border-2 border-white/20 cursor-pointer"
+                    style={{
+                      zIndex: 30
+                    }}
+                  >
+                    <img src={slides[carouselIndex].img} className="w-full h-full object-cover" alt={slides[carouselIndex].title} />
+                    {/* Dark gradient for visual overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/20 to-transparent" />
+
+                    {/* Text overlays on each image */}
+                    <div className="absolute bottom-6 left-6 right-6 text-left">
+                      <span className="inline-block px-3 py-1 mb-2.5 rounded-full bg-gradient-to-r from-[#5DC840]/90 to-[#29B8C8]/90 text-slate-950 text-[10px] font-mono font-bold uppercase tracking-wider">
+                        {slides[carouselIndex].category}
+                      </span>
+                      <h3 className="text-white text-lg sm:text-2xl font-heading font-black tracking-tight leading-tight">
+                        {slides[carouselIndex].title}
+                      </h3>
+                      <p className="text-white/70 text-xs sm:text-sm font-sans mt-1.5 leading-relaxed">
+                        {slides[carouselIndex].description}
+                      </p>
+                    </div>
+                  </motion.div>
+                </AnimatePresence>
+
+              </div>
+
+              {/* Carousel Category Pill-Tabs representing button indicators requested */}
+              <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-2.5 py-1 z-30">
+                {[
+                  { label: "Heavy Machinery", index: 0 },
+                  { label: "Industrial Equipment", index: 3 },
+                  { label: "Shipping & Logistics", index: 1 },
+                  { label: "Warehousing", index: 2 }
+                ].map((btn) => (
+                  <button
+                    key={btn.label}
+                    onClick={() => handleSelectSlide(btn.index)}
+                    className={`py-2 px-4 rounded-full text-[10px] sm:text-xs font-mono font-bold tracking-wider text-center border transition-all duration-300 ${
+                      carouselIndex === btn.index 
+                        ? 'bg-gradient-to-r from-[#29B8C8] to-[#5DC840] text-slate-950 border-transparent shadow-[0_0_12px_rgba(41,184,200,0.3)] scale-[1.03]' 
+                        : 'bg-white/5 text-slate-300 border-white/10 hover:bg-white/10 hover:border-white/20 hover:scale-[1.01]'
+                    }`}
+                  >
+                    {btn.label}
+                  </button>
+                ))}
+              </div>
+
+
+
+            </div>
+
           </div>
-
-          {/* Sourcing Category cards */}
-          <motion.div 
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4 }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-4xl mx-auto pt-10 text-slate-100"
-          >
-            {/* Card 1 — Quoted */}
-            <div className="bg-[#1e2f52]/40 backdrop-blur-md border border-white/15 rounded-2xl p-6 text-left shadow-xl transition-all duration-350 hover:translate-y-[-6px] hover:border-white/25 hover:bg-[#1e2f52]/60 flex flex-col justify-between min-h-[195px]">
-              <div>
-                <div className="flex items-center justify-between mb-3.5">
-                  <span className="text-[9px] sm:text-[10px] font-mono tracking-wider font-extrabold text-[#29B8C8] uppercase bg-[#29B8C8]/15 border border-[#29B8C8]/30 px-2.5 py-1 rounded-full flex items-center gap-1.5">
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#29B8C8] opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-[#29B8C8]"></span>
-                    </span>
-                    Quoted
-                  </span>
-                  <span className="text-white/40 text-[9px] font-mono font-semibold">RFQ-9041 &middot; Cape Town</span>
-                </div>
-                <h4 className="text-base font-extrabold text-white mb-2 tracking-tight">Automotive Fleet &amp; Parts</h4>
-                <p className="text-[11px] text-white/70 leading-relaxed">
-                  48 certified OEMs matched for bulk cargo container transit to Durban Port terminal.
-                </p>
-              </div>
-
-              {/* Step indicator */}
-              <div className="border-t border-white/5 pt-3.5 mt-4">
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[9px] font-mono font-bold tracking-wider text-slate-400 uppercase">Valuation Ready</span>
-                  <span className="text-[9px] font-mono font-bold text-[#5DC840]">100% Sourced</span>
-                </div>
-                <div className="flex gap-1">
-                  <div className="h-1 flex-1 rounded-full bg-[#5DC840]" />
-                  <div className="h-1 flex-1 rounded-full bg-[#5DC840]" />
-                  <div className="h-1 flex-1 rounded-full bg-[#5DC840]" />
-                  <div className="h-1 flex-1 rounded-full bg-white/10" />
-                </div>
-              </div>
-            </div>
-
-            {/* Card 2 — Sourcing Active */}
-            <div className="bg-[#1e2f52]/40 backdrop-blur-md border border-white/15 rounded-2xl p-6 text-left shadow-xl transition-all duration-350 hover:translate-y-[-6px] hover:border-white/25 hover:bg-[#1e2f52]/60 flex flex-col justify-between min-h-[195px]">
-              <div>
-                <div className="flex items-center justify-between mb-3.5">
-                  <span className="text-[9px] sm:text-[10px] font-mono tracking-wider font-extrabold text-[#5DC840] uppercase bg-[#5DC840]/15 border border-[#5DC840]/30 px-2.5 py-1 rounded-full flex items-center gap-1.5">
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#5DC840] opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-[#5DC840]"></span>
-                    </span>
-                    Sourcing Active
-                  </span>
-                  <span className="text-white/40 text-[9px] font-mono font-semibold">RFQ-9102 &middot; Port Louis</span>
-                </div>
-                <h4 className="text-base font-extrabold text-white mb-2 tracking-tight">Heavy Duty Machinery</h4>
-                <p className="text-[11px] text-white/70 leading-relaxed">
-                  Connecting with tier-one European manufacturers to locate multi-stage hydraulic assemblies.
-                </p>
-              </div>
-
-              {/* Step indicator */}
-              <div className="border-t border-white/5 pt-3.5 mt-4">
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[9px] font-mono font-bold tracking-wider text-slate-400 uppercase">Vendor Validation</span>
-                  <span className="text-[9px] font-mono font-bold text-[#5DC840]">65% Match</span>
-                </div>
-                <div className="flex gap-1">
-                  <div className="h-1 flex-1 rounded-full bg-[#5DC840]" />
-                  <div className="h-1 flex-1 rounded-full bg-[#5DC840]" />
-                  <div className="h-1 flex-1 rounded-full bg-white/10" />
-                  <div className="h-1 flex-1 rounded-full bg-white/10" />
-                </div>
-              </div>
-            </div>
-
-            {/* Card 3 — New Inquiry */}
-            <div className="bg-[#1e2f52]/40 backdrop-blur-md border border-white/15 rounded-2xl p-6 text-left shadow-xl transition-all duration-350 hover:translate-y-[-6px] hover:border-white/25 hover:bg-[#1e2f52]/60 flex flex-col justify-between min-h-[195px]">
-              <div>
-                <div className="flex items-center justify-between mb-3.5">
-                  <span className="text-[9px] sm:text-[10px] font-mono tracking-wider font-extrabold text-white/90 uppercase bg-white/10 border border-white/20 px-2.5 py-1 rounded-full flex items-center gap-1.5">
-                    <span className="relative flex h-1.5 w-1.5">
-                      <span className="absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-white"></span>
-                    </span>
-                    In Queue
-                  </span>
-                  <span className="text-white/40 text-[9px] font-mono font-semibold">RFQ-9112 &middot; Nairobi HQ</span>
-                </div>
-                <h4 className="text-base font-extrabold text-white mb-2 tracking-tight">MRO Industrial Supplies</h4>
-                <p className="text-[11px] text-white/70 leading-relaxed">
-                  Scanning international inventory databases for high-pressure industrial flow valves.
-                </p>
-              </div>
-
-              {/* Step indicator */}
-              <div className="border-t border-white/5 pt-3.5 mt-4">
-                <div className="flex items-center justify-between mb-1.5">
-                  <span className="text-[9px] font-mono font-bold tracking-wider text-slate-400 uppercase">Specs Analysis</span>
-                  <span className="text-[9px] font-mono font-bold text-slate-300">Awaiting Search</span>
-                </div>
-                <div className="flex gap-1">
-                  <div className="h-1 flex-1 rounded-full bg-[#5DC840]" />
-                  <div className="h-1 flex-1 rounded-full bg-white/10" />
-                  <div className="h-1 flex-1 rounded-full bg-white/10" />
-                  <div className="h-1 flex-1 rounded-full bg-white/10" />
-                </div>
-              </div>
-            </div>
-          </motion.div>
-
         </div>
       </section>
 
