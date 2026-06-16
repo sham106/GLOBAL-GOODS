@@ -75,6 +75,8 @@ export default function InquiryFormPage() {
   const [isDragging, setIsDragging] = useState(false);
 
   const fileInputRef = useRef(null);
+  const formFooterRef = useRef(null);
+  const [submitError, setSubmitError] = useState('');
 
   // AI Suggestion debounce logic on Part Description
   useEffect(() => {
@@ -119,6 +121,7 @@ export default function InquiryFormPage() {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+    if (submitError) setSubmitError('');
     // Clear error for that field immediately
     if (errors[name]) {
       setErrors(prev => {
@@ -130,78 +133,118 @@ export default function InquiryFormPage() {
   };
 
   // Check valid status on each step
-  const validateStep = (currentStep) => {
+  const validateStep = (currentStep, data = formData) => {
     const newErrors = {};
 
     if (currentStep === 1) {
-      if (!formData.title) newErrors.title = 'Title selection is required.';
-      if (!formData.firstName.trim()) {
+      if (!data.title) newErrors.title = 'Title selection is required.';
+      if (!data.firstName.trim()) {
         newErrors.firstName = 'First name is required.';
-      } else if (formData.firstName.trim().length < 2) {
+      } else if (data.firstName.trim().length < 2) {
         newErrors.firstName = 'First name must be at least 2 characters.';
       }
-      if (!formData.lastName.trim()) {
+      if (!data.lastName.trim()) {
         newErrors.lastName = 'Last name is required.';
-      } else if (formData.lastName.trim().length < 2) {
+      } else if (data.lastName.trim().length < 2) {
         newErrors.lastName = 'Last name must be at least 2 characters.';
       }
       
-      const parsedDigits = formData.contactNumber.replace(/\D/g, '');
-      if (!formData.contactNumber.trim()) {
+      const parsedDigits = data.contactNumber.replace(/\D/g, '');
+      if (!data.contactNumber.trim()) {
         newErrors.contactNumber = 'Contact number is required.';
       } else if (parsedDigits.length < 7) {
         newErrors.contactNumber = 'Contact number must be at least 7 digits.';
       }
 
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!formData.email.trim()) {
+      if (!data.email.trim()) {
         newErrors.email = 'Email address is required.';
-      } else if (!emailRegex.test(formData.email.trim())) {
+      } else if (!emailRegex.test(data.email.trim())) {
         newErrors.email = 'Please provide a valid email format.';
       }
 
-      if (!formData.contactMethod) {
+      if (!data.contactMethod) {
         newErrors.contactMethod = 'Preferred contact method is required.';
       }
     }
 
     if (currentStep === 2) {
-      if (!formData.productCategory) {
+      if (!data.productCategory) {
         newErrors.productCategory = 'Sourcing category is required.';
-      } else if (formData.productCategory === 'Automotive Fleet & Parts') {
-        if (!formData.vehicleMake) newErrors.vehicleMake = 'Vehicle brand/make is required.';
-        if (!formData.vehicleModel.trim()) newErrors.vehicleModel = 'Vehicle model description is required.';
-        if (!formData.vehicleYear) newErrors.vehicleYear = 'Vehicle year of manufacture is required.';
+      } else if (data.productCategory === 'Automotive Fleet & Parts') {
+        if (!data.vehicleMake) newErrors.vehicleMake = 'Vehicle brand/make is required.';
+        if (!data.vehicleModel.trim()) newErrors.vehicleModel = 'Vehicle model description is required.';
+        if (!data.vehicleYear) newErrors.vehicleYear = 'Vehicle year of manufacture is required.';
       } else {
-        if (!formData.productType || !formData.productType.trim()) {
+        if (!data.productType || !data.productType.trim()) {
           newErrors.productType = 'Product or Equipment Type description is required.';
         }
       }
     }
 
     if (currentStep === 3) {
-      if (!formData.partDescription.trim()) {
+      if (!data.partDescription.trim()) {
         newErrors.partDescription = 'Please describe the part or issue.';
-      } else if (formData.partDescription.trim().length < 10) {
+      } else if (data.partDescription.trim().length < 10) {
         newErrors.partDescription = 'Please provide a clearer specification (at least 10 characters).';
       }
-      if (!formData.partName.trim()) {
+      if (!data.partName.trim()) {
         newErrors.partName = 'Please enter a name for the part.';
       }
-      if (!formData.urgency) {
-        newErrors.urgency = 'Sourcing urgency preference is required.';
+      if (!data.urgency) {
+        newErrors.urgency = 'Please select how urgent this request is.';
       }
     }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return {
+      valid: Object.keys(newErrors).length === 0,
+      errors: newErrors,
+    };
+  };
+
+  const fieldElementIds = {
+    title: 'title-select',
+    firstName: 'firstname-input',
+    lastName: 'lastname-input',
+    contactNumber: 'phone-input',
+    email: 'email-input',
+    contactMethod: 'contact-method-select',
+    productCategory: 'product-category-select',
+    vehicleMake: 'make-select',
+    vehicleModel: 'model-input',
+    vehicleYear: 'year-select',
+    productType: 'product-type-input',
+    partDescription: 'part-desc-textarea',
+    partName: 'part-name-input',
+    urgency: 'urgency-section',
+  };
+
+  const scrollToFirstError = (errorFields) => {
+    const firstField = Object.keys(errorFields)[0];
+    if (!firstField) return;
+
+    const elementId = fieldElementIds[firstField];
+    const element = elementId ? document.getElementById(elementId) : null;
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      if (typeof element.focus === 'function') {
+        element.focus({ preventScroll: true });
+      }
+    }
   };
 
   // Navigation handlers
   const handleNext = () => {
-    if (validateStep(step)) {
+    const result = validateStep(step);
+    if (result.valid) {
+      setSubmitError('');
       setStep(prev => prev + 1);
+      return;
     }
+
+    setSubmitError('Please complete the required fields highlighted below.');
+    scrollToFirstError(result.errors);
   };
 
   const handleBack = () => {
@@ -268,62 +311,79 @@ export default function InquiryFormPage() {
 
   // High-fidelity Submit handler (step 3 submit)
   const handleSubmitInquiry = () => {
-    if (!validateStep(3)) return;
+    const submissionData = {
+      ...formData,
+      partName: formData.partName.trim() || aiSuggestion?.partName || '',
+    };
 
+    if (submissionData.partName !== formData.partName) {
+      setFormData(submissionData);
+    }
+
+    const result = validateStep(3, submissionData);
+    if (!result.valid) {
+      setSubmitError('Please complete all required fields before submitting.');
+      scrollToFirstError(result.errors);
+      formFooterRef.current?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      return;
+    }
+
+    setSubmitError('');
     setIsSubmitting(true);
 
-    // Build standard multi-part payload structure
-    const payload = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      if (key === 'images') {
-        value.forEach(file => payload.append('images', file));
-      } else {
-        payload.append(key, value);
-      }
-    });
-
-    // Simulate precise POST transmission before persisting to local storage
     setTimeout(() => {
-      const localInquiriesKey = 'global_goods_inquiries';
-      const existingRaw = localStorage.getItem(localInquiriesKey);
-      const list = existingRaw ? JSON.parse(existingRaw) : [];
+      try {
+        const localInquiriesKey = 'global_goods_inquiries';
+        const existingRaw = localStorage.getItem(localInquiriesKey);
+        const list = existingRaw ? JSON.parse(existingRaw) : [];
 
-      // Map nice layout fields matching DashboardPage keys
-      const mappedCategory = aiSuggestion ? aiSuggestion.category : 'General Mechanics';
-      
-      const newRecord = {
-        id: refId,
-        createdAt: new Date().toISOString(),
-        status: 'new', // new | in_progress | quoted | closed
-        priority: formData.urgency === 'asap' ? 'urgent' : (formData.urgency === 'within_week' ? 'medium' : 'low'),
-        category: mappedCategory,
-        vehicleMake: formData.vehicleMake,
-        vehicleModel: formData.vehicleModel,
-        vehicleYear: parseInt(formData.vehicleYear, 10) || 2024,
-        vehicleEngine: formData.chassisNumber ? 'Match (chassis)' : 'Standard Trim',
-        partName: formData.partName,
-        partNumber: formData.partNumber || 'Auto-Sourced',
-        quantity: parseInt(formData.quantity, 10) || 1,
-        urgency: formData.urgency,
-        notes: formData.partDescription + (formData.notes ? ` | Additional note: ${formData.notes}` : ''),
-        customerName: `${formData.firstName} ${formData.lastName}`,
-        customerEmail: formData.email,
-        customerPhone: formData.contactNumber,
-        contactMethod: formData.contactMethod,
-        company: formData.companyName || null,
-        images: imagePreviews, // Store base64 data URLs for immediate dashboard viewing
-        aiSummary: aiSuggestion 
-          ? aiSuggestion.text 
-          : `Automated matching resolved for ${formData.partName}. Certified safety checks pending standard dispatch queue.`,
-        aiCategory: mappedCategory
-      };
+        const mappedCategory = aiSuggestion?.category || submissionData.productCategory || 'General Mechanics';
 
-      list.unshift(newRecord);
-      localStorage.setItem(localInquiriesKey, JSON.stringify(list));
+        const newRecord = {
+          id: refId,
+          createdAt: new Date().toISOString(),
+          status: 'new',
+          priority: submissionData.urgency === 'asap' ? 'urgent' : (submissionData.urgency === 'within_week' ? 'medium' : 'low'),
+          category: mappedCategory,
+          vehicleMake: submissionData.vehicleMake,
+          vehicleModel: submissionData.vehicleModel,
+          vehicleYear: parseInt(submissionData.vehicleYear, 10) || 2024,
+          vehicleEngine: submissionData.chassisNumber ? 'Match (chassis)' : 'Standard Trim',
+          partName: submissionData.partName,
+          partNumber: submissionData.partNumber || 'Auto-Sourced',
+          quantity: parseInt(submissionData.quantity, 10) || 1,
+          urgency: submissionData.urgency,
+          notes: submissionData.partDescription + (submissionData.notes ? ` | Additional note: ${submissionData.notes}` : ''),
+          customerName: `${submissionData.firstName} ${submissionData.lastName}`,
+          customerEmail: submissionData.email,
+          customerPhone: submissionData.contactNumber,
+          contactMethod: submissionData.contactMethod,
+          company: submissionData.companyName || null,
+          images: imagePreviews,
+          aiSummary: aiSuggestion
+            ? aiSuggestion.text
+            : `Automated matching resolved for ${submissionData.partName}. Certified safety checks pending standard dispatch queue.`,
+          aiCategory: mappedCategory,
+        };
 
-      setIsSubmitting(false);
-      setStep('success');
-    }, 1500);
+        list.unshift(newRecord);
+
+        try {
+          localStorage.setItem(localInquiriesKey, JSON.stringify(list));
+        } catch (storageError) {
+          const recordWithoutImages = { ...newRecord, images: [] };
+          const listWithoutImages = [recordWithoutImages, ...list.slice(1)];
+          localStorage.setItem(localInquiriesKey, JSON.stringify(listWithoutImages));
+        }
+
+        setIsSubmitting(false);
+        setStep('success');
+      } catch (error) {
+        console.error('Failed to submit inquiry:', error);
+        setIsSubmitting(false);
+        setSubmitError('Something went wrong while saving your inquiry. Please try again.');
+      }
+    }, 800);
   };
 
   // Master reset state back to step 1
@@ -351,6 +411,7 @@ export default function InquiryFormPage() {
       images: []
     });
     setErrors({});
+    setSubmitError('');
     setAiSuggestion(null);
     setImagePreviews([]);
     setStep(1);
@@ -439,7 +500,7 @@ export default function InquiryFormPage() {
       {/* Main Form/Content Container in grid centering */}
       <div className="flex-1 max-w-xl mx-auto w-full flex flex-col justify-center">
         
-        <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-10 relative overflow-hidden flex flex-col justify-between">
+        <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-10 relative flex flex-col">
           
           <AnimatePresence mode="wait">
             
@@ -876,7 +937,7 @@ export default function InquiryFormPage() {
                   </div>
 
                   {/* Sourcing Urgency Selector */}
-                  <div className="space-y-1.5">
+                  <div className="space-y-1.5" id="urgency-section">
                     <label className={labelStyle}>How urgent is this?</label>
                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                       
@@ -1173,7 +1234,13 @@ export default function InquiryFormPage() {
 
           {/* FORM NAVIGATION BUTTONS FOOTER - Hidden on success screen */}
           {step !== 'success' && (
-            <div className="border-t border-gray-100 pt-6 mt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 shrink-0">
+            <div ref={formFooterRef} className="border-t border-gray-100 pt-6 mt-6 flex flex-col gap-4 shrink-0 sticky bottom-0 bg-white z-10">
+              {submitError && (
+                <div className="flex items-start gap-2 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700" role="alert">
+                  <AlertCircle className="h-4 w-4 shrink-0 mt-0.5" />
+                  <span>{submitError}</span>
+                </div>
+              )}
               
               {/* Step counter for mobile (positioned at the top, centered) */}
               <div className="sm:hidden text-center text-slate-400 font-semibold text-[10px] uppercase tracking-widest font-mono">
@@ -1181,6 +1248,7 @@ export default function InquiryFormPage() {
               </div>
 
               {/* Navigation button wrapper targeting mobile touch compliance (min-h-44px) */}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
               <div className="flex items-center justify-between w-full sm:w-auto gap-4">
                 
                 {/* Back button or Cancel & Home */}
@@ -1240,6 +1308,7 @@ export default function InquiryFormPage() {
                   )}
                 </div>
 
+              </div>
               </div>
 
             </div>
