@@ -30,6 +30,10 @@ import {
   Image
 } from 'lucide-react';
 import { formatDate } from '../utils/generateRef';
+import Logo from '../components/Logo';
+
+const navItemClass = (isActive) =>
+  `dashboard-nav-item ${isActive ? 'dashboard-nav-item-active' : 'dashboard-nav-item-inactive'}`;
 
 // Initial pristine seed data matching GGS standards
 const DUMMY_INQUIRIES = [
@@ -393,129 +397,76 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="flex min-h-screen bg-[#f8fafc] text-slate-800 relative select-none font-body">
+    <div className="dashboard flex min-h-screen bg-[#f8fafc] text-slate-800 relative font-body">
 
       {/* SIDEBAR COMPONENT - Fixed for desktop screens (240px) */}
-      <aside className="w-60 bg-[#1B2A4A] flex flex-col justify-between text-slate-200 shrink-0 h-screen sticky top-0 left-0 hidden md:flex z-30 shadow-xl">
+      <aside className="w-64 bg-[#1B2A4A] flex flex-col justify-between text-slate-200 shrink-0 h-screen sticky top-0 left-0 hidden md:flex z-30 shadow-xl">
         <div className="flex flex-col">
           {/* Brand header */}
-          <div className="p-6 border-b border-slate-800 flex items-center gap-3">
-            <div className="shrink-0">
-              <svg width="34" height="34" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                {/* Green Globe Background */}
-                <circle cx="48" cy="52" r="34" fill="#5DC840" />
-                {/* White Grid Lines */}
-                <path d="M48,18 C48,34 48,65 48,86" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M48,18 C33,35 22,55 14,72" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M48,18 C63,35 74,55 82,72" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M16,42 Q48,60 80,42" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-                {/* Intersections */}
-                <circle cx="48" cy="32" r="3.5" fill="white" />
-                <circle cx="28" cy="40" r="3.5" fill="white" />
-                <circle cx="68" cy="40" r="3.5" fill="white" />
-                {/* Teal Orbit */}
-                <path d="M3,74 C25,82 50,111 93,22 C97,11 93,13 86,27 C66,61 35,77 3,74 Z" fill="#29B8C8" />
-                <circle cx="81" cy="11" r="7.5" fill="#29B8C8" />
-              </svg>
-            </div>
-            <div className="flex flex-col text-left">
-              <span className="font-heading font-black tracking-tight text-white leading-none text-xs sm:text-[13px] uppercase">
-                Global Goods <span className="text-[#29B8C8]">&amp;</span> Services
-              </span>
-              <span className="font-mono text-[8px] uppercase tracking-[0.18em] text-[#5DC840] font-bold leading-none mt-1">
-                Admin Dashboard
-              </span>
-            </div>
+          <div className="p-6 border-b border-slate-800">
+            <Logo size="sm" variant="dark" subtitle="Admin Dashboard" />
           </div>
 
           {/* Nav links */}
           <nav className="p-4 space-y-6">
             
             {/* MAIN CATEGORY */}
-            <div className="space-y-1.5">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block px-3">
-                Main
-              </span>
+            <div className="space-y-1">
+              <span className="dashboard-nav-label">Main</span>
               <button
                 onClick={() => setActiveNav('Inquiries')}
-                className={`w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all ${
-                  activeNav === 'Inquiries'
-                    ? 'bg-[#5DC840]/18 text-[#5DC840]'
-                    : 'text-slate-350 hover:bg-slate-800/50 hover:text-white'
-                }`}
+                className={`${navItemClass(activeNav === 'Inquiries')} justify-between`}
               >
-                <div className="flex items-center gap-2.5">
-                  <Grid className="h-4 w-4" />
+                <div className="flex items-center gap-3">
+                  <Grid className="h-[18px] w-[18px]" />
                   <span>Inquiries</span>
                 </div>
-                <span className="bg-[#5DC840] text-white text-[10px] font-black h-5 px-1.5 rounded-full flex items-center justify-center">
+                <span className="bg-[#5DC840] text-white text-xs font-bold h-5 min-w-5 px-1.5 rounded-full flex items-center justify-center">
                   {inquiries.filter(i => i.status === 'new').length > 0 ? inquiries.filter(i => i.status === 'new').length : '7'}
                 </span>
               </button>
 
               <button
                 onClick={() => setActiveNav('Analytics')}
-                className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all ${
-                  activeNav === 'Analytics'
-                    ? 'bg-[#5DC840]/18 text-[#5DC840]'
-                    : 'text-slate-350 hover:bg-slate-800/50 hover:text-white'
-                }`}
+                className={navItemClass(activeNav === 'Analytics')}
               >
-                <TrendingUp className="h-4 w-4" />
+                <TrendingUp className="h-[18px] w-[18px]" />
                 <span>Analytics</span>
               </button>
 
               <button
                 onClick={() => setActiveNav('Quotes Sent')}
-                className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all ${
-                  activeNav === 'Quotes Sent'
-                    ? 'bg-[#5DC840]/18 text-[#5DC840]'
-                    : 'text-slate-350 hover:bg-slate-800/50 hover:text-white'
-                }`}
+                className={navItemClass(activeNav === 'Quotes Sent')}
               >
-                <Send className="h-4 w-4" />
+                <Send className="h-[18px] w-[18px]" />
                 <span>Quotes Sent</span>
               </button>
             </div>
 
             {/* MANAGE CATEGORY */}
-            <div className="space-y-1.5 pt-2">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest block px-3">
-                Manage
-              </span>
+            <div className="space-y-1 pt-4">
+              <span className="dashboard-nav-label">Manage</span>
               <button
                 onClick={() => setActiveNav('Customers')}
-                className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all ${
-                  activeNav === 'Customers'
-                    ? 'bg-[#5DC840]/18 text-[#5DC840]'
-                    : 'text-slate-350 hover:bg-slate-800/50 hover:text-white'
-                }`}
+                className={navItemClass(activeNav === 'Customers')}
               >
-                <Users className="h-4 w-4" />
+                <Users className="h-[18px] w-[18px]" />
                 <span>Customers</span>
               </button>
 
               <button
                 onClick={() => setActiveNav('Categories')}
-                className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all ${
-                  activeNav === 'Categories'
-                    ? 'bg-[#5DC840]/18 text-[#5DC840]'
-                    : 'text-slate-350 hover:bg-slate-800/50 hover:text-white'
-                }`}
+                className={navItemClass(activeNav === 'Categories')}
               >
-                <FolderOpen className="h-4 w-4" />
+                <FolderOpen className="h-[18px] w-[18px]" />
                 <span>Categories</span>
               </button>
 
               <button
                 onClick={() => setActiveNav('Settings')}
-                className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all ${
-                  activeNav === 'Settings'
-                    ? 'bg-[#5DC840]/18 text-[#5DC840]'
-                    : 'text-slate-350 hover:bg-slate-800/50 hover:text-white'
-                }`}
+                className={navItemClass(activeNav === 'Settings')}
               >
-                <Settings className="h-4 w-4" />
+                <Settings className="h-[18px] w-[18px]" />
                 <span>Settings</span>
               </button>
             </div>
@@ -530,13 +481,13 @@ export default function DashboardPage() {
               GG
             </div>
             <div className="flex flex-col overflow-hidden">
-              <span className="text-xs font-bold text-white leading-none whitespace-nowrap">Admin</span>
-              <span className="text-[10px] text-slate-400 mt-1 truncate">Business Owner</span>
+              <span className="text-sm font-semibold text-white leading-none whitespace-nowrap">Admin</span>
+              <span className="text-xs text-slate-400 mt-1 truncate">Business Owner</span>
             </div>
           </div>
           <Link
             to="/"
-            className="w-full text-center block text-[10px] font-bold text-slate-400 hover:text-[#5DC840] border border-slate-800 rounded-xl py-2 hover:bg-slate-800/30 transition-all"
+            className="w-full text-center block text-xs font-semibold text-slate-400 hover:text-[#5DC840] border border-slate-700 rounded-xl py-2.5 hover:bg-slate-800/40 transition-all"
           >
             Leave Sourcing Console
           </Link>
@@ -544,50 +495,50 @@ export default function DashboardPage() {
       </aside>
 
       {/* MOBILE BOTTOM TAB BAR (Hidden on desktop screen, fixed stick under 768px) */}
-      <div className="md:hidden fixed bottom-0 left-0 right-0 h-16 bg-[#1B2A4A] border-t border-slate-800 z-50 flex items-center justify-around px-2 text-white">
+      <div className="md:hidden fixed bottom-0 left-0 right-0 h-[4.25rem] bg-[#1B2A4A] border-t border-slate-700 z-50 flex items-center justify-around px-2 text-white">
         <button
           onClick={() => setActiveNav('Inquiries')}
           className={`flex flex-col items-center justify-center gap-1 flex-1 h-full py-1 ${
-            activeNav === 'Inquiries' ? 'text-[#5DC840] font-bold' : 'text-slate-400'
+            activeNav === 'Inquiries' ? 'text-[#5DC840] font-semibold' : 'text-slate-400'
           }`}
         >
           <span className="relative">
             <Grid className="h-5 w-5" />
-            <span className="absolute -top-1.5 -right-2 bg-[#5DC840] text-white text-[8px] h-3.5 w-3.5 rounded-full flex items-center justify-center font-bold">
+            <span className="absolute -top-1.5 -right-2 bg-[#5DC840] text-white text-[10px] h-4 w-4 rounded-full flex items-center justify-center font-bold">
               1
             </span>
           </span>
-          <span className="text-[10px]">Inquiries</span>
+          <span className="text-xs">Inquiries</span>
         </button>
 
         <button
           onClick={() => setActiveNav('Analytics')}
           className={`flex flex-col items-center justify-center gap-1 flex-1 h-full py-1 ${
-            activeNav === 'Analytics' ? 'text-[#5DC840] font-bold' : 'text-slate-400'
+            activeNav === 'Analytics' ? 'text-[#5DC840] font-semibold' : 'text-slate-400'
           }`}
         >
           <TrendingUp className="h-5 w-5" />
-          <span className="text-[10px]">Analytics</span>
+          <span className="text-xs">Analytics</span>
         </button>
 
         <button
           onClick={() => setActiveNav('Quotes Sent')}
           className={`flex flex-col items-center justify-center gap-1 flex-1 h-full py-1 ${
-            activeNav === 'Quotes Sent' ? 'text-[#5DC840] font-bold' : 'text-slate-400'
+            activeNav === 'Quotes Sent' ? 'text-[#5DC840] font-semibold' : 'text-slate-400'
           }`}
         >
           <Send className="h-5 w-5" />
-          <span className="text-[10px]">Quotes</span>
+          <span className="text-xs">Quotes</span>
         </button>
 
         <button
           onClick={() => setActiveNav('Settings')}
           className={`flex flex-col items-center justify-center gap-1 flex-1 h-full py-1 ${
-            activeNav === 'Settings' ? 'text-[#5DC840] font-bold' : 'text-slate-400'
+            activeNav === 'Settings' ? 'text-[#5DC840] font-semibold' : 'text-slate-400'
           }`}
         >
           <Settings className="h-5 w-5" />
-          <span className="text-[10px]">Settings</span>
+          <span className="text-xs">Settings</span>
         </button>
       </div>
 
@@ -595,12 +546,12 @@ export default function DashboardPage() {
       <main className="flex-1 flex flex-col min-w-0 pb-20 md:pb-6">
         
         {/* HEADER BAR */}
-        <header className="bg-white border-b border-slate-200/80 px-6 py-4 flex items-center justify-between sticky top-0 bg-opacity-70 backdrop-blur-md z-20">
-          <div className="flex flex-col">
-            <h1 className="font-heading font-extrabold text-lg sm:text-xl text-[#1B2A4A] tracking-tight">
+        <header className="bg-white border-b border-slate-200 px-6 py-5 flex items-center justify-between sticky top-0 z-20 shadow-sm">
+          <div className="flex flex-col gap-1">
+            <h1 className="dashboard-page-title">
               {activeNav === 'Inquiries' ? 'Inquiries' : activeNav}
             </h1>
-            <p className="text-slate-400 text-[10px] sm:text-xs font-normal">
+            <p className="dashboard-page-subtitle">
               {activeNav === 'Inquiries' ? `Today: ${new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' })} • 7 new responses pending match` : `Global Goods & Services Pty Ltd | ${activeNav}`}
             </p>
           </div>
@@ -608,7 +559,7 @@ export default function DashboardPage() {
           <div className="flex items-center gap-3">
             <button
               onClick={handleExportCSV}
-              className="text-[#1B2A4A] bg-slate-50 hover:bg-slate-100 border border-slate-205 py-2 px-3 sm:px-4 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all shadow-sm"
+              className="text-brand-navy bg-slate-50 hover:bg-slate-100 border border-slate-200 py-2.5 px-4 rounded-xl text-sm font-semibold flex items-center gap-2 transition-all shadow-sm"
               title="Export filtered inquiries in spreadsheet format"
             >
               <Download className="h-3.5 w-3.5 text-[#29B8C8]" />
@@ -640,12 +591,12 @@ export default function DashboardPage() {
                 {/* CARD 1 - Total inquiries */}
                 <div className="bg-white border border-slate-200/80 p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
                   <div className="absolute top-0 left-0 right-0 h-1 bg-[#29B8C8]" />
-                  <div className="flex items-center justify-between text-slate-400 mb-2">
-                    <span className="text-[10.5px] font-bold uppercase tracking-wider">Total Inquiries</span>
+                  <div className="flex items-center justify-between text-slate-500 mb-2">
+                    <span className="dashboard-kpi-label">Total Inquiries</span>
                     <FolderOpen className="h-4 w-4 text-[#29B8C8]" />
                   </div>
                   <div className="text-2xl sm:text-3xl font-black text-[#1B2A4A] tracking-tight">{totalInquiriesCount}</div>
-                  <div className="text-[10px] text-emerald-600 font-bold mt-1.5 flex items-center gap-1">
+                  <div className="text-xs text-emerald-600 font-semibold mt-2 flex items-center gap-1">
                     <span>↑ 12 this week</span>
                   </div>
                 </div>
@@ -653,12 +604,12 @@ export default function DashboardPage() {
                 {/* CARD 2 - Pending response */}
                 <div className="bg-white border border-slate-200/80 p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
                   <div className="absolute top-0 left-0 right-0 h-1 bg-amber-400" />
-                  <div className="flex items-center justify-between text-slate-400 mb-2">
-                    <span className="text-[10.5px] font-bold uppercase tracking-wider">Queries Pending</span>
+                  <div className="flex items-center justify-between text-slate-500 mb-2">
+                    <span className="dashboard-kpi-label">Queries Pending</span>
                     <Info className="h-4 w-4 text-amber-550" />
                   </div>
                   <div className="text-2xl sm:text-3xl font-black text-amber-600 tracking-tight">{pendingCount}</div>
-                  <div className="text-[10px] text-amber-600 font-bold mt-1.5 flex items-center gap-1">
+                  <div className="text-xs text-amber-600 font-semibold mt-2 flex items-center gap-1">
                     <span className="bg-amber-50 px-2 py-0.5 rounded border border-amber-200/60 font-medium font-semibold">In queue</span>
                   </div>
                 </div>
@@ -666,12 +617,12 @@ export default function DashboardPage() {
                 {/* CARD 3 - Quoted inquiries */}
                 <div className="bg-white border border-slate-200/80 p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
                   <div className="absolute top-0 left-0 right-0 h-1 bg-[#5DC840]" />
-                  <div className="flex items-center justify-between text-slate-400 mb-2">
-                    <span className="text-[10.5px] font-bold uppercase tracking-wider">Quotes Issued</span>
+                  <div className="flex items-center justify-between text-slate-500 mb-2">
+                    <span className="dashboard-kpi-label">Quotes Issued</span>
                     <CheckCircle className="h-4 w-4 text-[#5DC840]" />
                   </div>
                   <div className="text-2xl sm:text-3xl font-black text-[#1B2A4A] tracking-tight">{quotedCount}</div>
-                  <div className="text-[10px] text-emerald-600 font-bold mt-1.5 flex items-center gap-1">
+                  <div className="text-xs text-emerald-600 font-semibold mt-2 flex items-center gap-1">
                     <span>↑ 5 this week</span>
                   </div>
                 </div>
@@ -679,12 +630,12 @@ export default function DashboardPage() {
                 {/* CARD 4 - Closed inquiries */}
                 <div className="bg-white border border-slate-200/80 p-4 rounded-2xl shadow-sm hover:shadow-md transition-shadow relative overflow-hidden">
                   <div className="absolute top-0 left-0 right-0 h-1 bg-slate-400" />
-                  <div className="flex items-center justify-between text-slate-400 mb-2">
-                    <span className="text-[10.5px] font-bold uppercase tracking-wider">Inquiries Resolved</span>
+                  <div className="flex items-center justify-between text-slate-500 mb-2">
+                    <span className="dashboard-kpi-label">Inquiries Resolved</span>
                     <TrendingUp className="h-4 w-4 text-slate-400" />
                   </div>
                   <div className="text-2xl sm:text-3xl font-black text-slate-700 tracking-tight">{closedCount}</div>
-                  <div className="text-[10px] text-slate-400 font-bold mt-1.5">
+                  <div className="text-xs text-slate-500 font-semibold mt-2">
                     <span>68% conversion rate</span>
                   </div>
                 </div>
@@ -703,7 +654,7 @@ export default function DashboardPage() {
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
                       placeholder="Search inquiries by customer name, brand / make, part names..."
-                      className="w-full bg-slate-50 border border-slate-200 focus:bg-white rounded-xl pl-10 pr-4 py-2.5 text-xs text-slate-805 outline-none focus:border-[#29B8C8] focus:ring-2 focus:ring-[#29B8C8]/10 transition-all font-medium"
+                      className="w-full bg-slate-50 border border-slate-200 focus:bg-white rounded-xl pl-10 pr-4 py-3 text-sm text-slate-800 outline-none focus:border-[#29B8C8] focus:ring-2 focus:ring-[#29B8C8]/15 transition-all font-medium"
                     />
                   </div>
 
@@ -721,10 +672,10 @@ export default function DashboardPage() {
                         key={pill.id}
                         type="button"
                         onClick={() => setActiveFilter(pill.id)}
-                        className={`px-3 py-1.5 rounded-full text-xs font-bold transition-all border ${
+                        className={`px-3.5 py-2 rounded-full text-sm font-semibold transition-all border ${
                           activeFilter === pill.id
-                            ? 'border-[#29B8C8] bg-[#29B8C8]/10 text-brand-navy shadow-xs'
-                            : 'border-slate-200 bg-white text-slate-500 hover:border-slate-350 hover:bg-slate-50/50'
+                            ? 'border-[#29B8C8] bg-[#29B8C8]/10 text-brand-navy shadow-sm'
+                            : 'border-slate-200 bg-white text-slate-600 hover:border-slate-300 hover:bg-slate-50'
                         }`}
                       >
                         {pill.emoji && <span className="mr-1 inline-block">{pill.emoji}</span>}
@@ -752,16 +703,16 @@ export default function DashboardPage() {
                   <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                       <thead>
-                        <tr className="bg-slate-50/70 border-b border-slate-150 text-[10px] font-extrabold text-slate-400 uppercase tracking-widest">
-                          <th className="py-4.5 px-4 sticky left-0 bg-slate-50/90 md:relative z-10">Customer</th>
-                          <th className="py-4.5 px-4">Vehicle</th>
-                          <th className="py-4.5 px-4">Part Details</th>
-                          <th className="py-4.5 px-4 text-center">Attached Photos</th>
-                          <th className="py-4.5 px-4 max-w-[200px]">AI Match Recommendation</th>
-                          <th className="py-4.5 px-4">Priority</th>
-                          <th className="py-4.5 px-4">Status</th>
-                          <th className="py-4.5 px-4">Date</th>
-                          <th className="py-4.5 px-4 text-center">Actions</th>
+                        <tr className="bg-slate-50 border-b border-slate-200">
+                          <th className="dashboard-table-head sticky left-0 bg-slate-50 md:relative z-10">Customer</th>
+                          <th className="dashboard-table-head">Vehicle</th>
+                          <th className="dashboard-table-head">Part Details</th>
+                          <th className="dashboard-table-head text-center">Attached Photos</th>
+                          <th className="dashboard-table-head max-w-[200px]">AI Match Recommendation</th>
+                          <th className="dashboard-table-head">Priority</th>
+                          <th className="dashboard-table-head">Status</th>
+                          <th className="dashboard-table-head">Date</th>
+                          <th className="dashboard-table-head text-center">Actions</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-slate-150">
@@ -775,11 +726,11 @@ export default function DashboardPage() {
                             >
                               {/* Sticky Customer on small screens */}
                               <td className="py-4 px-4 sticky left-0 bg-white group-hover:bg-slate-50 md:relative z-10 border-r border-slate-100 md:border-r-0 shadow-[2px_0_5px_-2px_rgba(0,0,0,0.03)] md:shadow-none min-w-[140px]">
-                                <div className="space-y-1">
-                                  <div className="font-heading font-extrabold text-xs text-[#1B2A4A] truncate">
+                                <div className="space-y-1.5">
+                                  <div className="font-heading font-bold text-sm text-brand-navy truncate">
                                     {inq.customerName}
                                   </div>
-                                  <div className="text-[10px] text-slate-400 font-mono">
+                                  <div className="text-xs text-slate-500 font-mono">
                                     {inq.id}
                                   </div>
                                   <div>
@@ -790,15 +741,15 @@ export default function DashboardPage() {
 
                               {/* Vehicle column */}
                               <td className="py-4 px-4 min-w-[150px]">
-                                <div className="space-y-1">
-                                  <div className="font-bold text-xs text-slate-705">
+                                <div className="space-y-1.5">
+                                  <div className="font-semibold text-sm text-slate-800">
                                     {inq.vehicleMake} {inq.vehicleModel}
                                   </div>
-                                  <div className="text-[10px] text-slate-400 leading-none">
+                                  <div className="text-xs text-slate-500">
                                     Year: {inq.vehicleYear}
                                   </div>
                                   {inq.vehicleEngine && (
-                                    <div className="text-[9px] text-[#29B8C8] font-semibold tracking-wider uppercase font-mono leading-none">
+                                    <div className="text-xs text-brand-teal font-medium uppercase">
                                       Trim: {inq.vehicleEngine}
                                     </div>
                                   )}
@@ -808,14 +759,14 @@ export default function DashboardPage() {
                               {/* Part details column */}
                               <td className="py-4 px-4 min-w-[160px]">
                                 <div className="space-y-1.5">
-                                  <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider inline-block ${getCategoryColor(inq.category)}`}>
+                                  <span className={`px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wide inline-block ${getCategoryColor(inq.category)}`}>
                                     {inq.category}
                                   </span>
-                                  <div className="text-xs text-slate-700 font-medium">
-                                    {inq.partName} <span className="font-mono text-xs font-black text-[#5DC840]">× {inq.quantity}</span>
+                                  <div className="text-sm text-slate-700 font-medium">
+                                    {inq.partName} <span className="font-mono text-sm font-bold text-brand-green">× {inq.quantity}</span>
                                   </div>
                                   {inq.partNumber && (
-                                    <div className="text-[9.5px] font-mono text-slate-450 uppercase">
+                                    <div className="text-xs font-mono text-slate-500 uppercase">
                                       PN: {inq.partNumber}
                                     </div>
                                   )}
@@ -860,10 +811,10 @@ export default function DashboardPage() {
                               {/* AI summary */}
                               <td className="py-4 px-4 max-w-[220px] min-w-[200px]">
                                 <div className="space-y-1">
-                                  <span className="inline-flex items-center gap-1 bg-[#e8f9e3] border border-[#5DC840]/30 text-[#3a9e22] text-[9px] font-bold px-1.5 py-0.5 rounded-full uppercase leading-none scale-[0.95] origin-left">
-                                    <Sparkles className="h-2.5 w-2.5" /> AI Matcher
+                                  <span className="inline-flex items-center gap-1 bg-[#e8f9e3] border border-[#5DC840]/30 text-[#3a9e22] text-xs font-semibold px-2 py-0.5 rounded-full uppercase">
+                                    <Sparkles className="h-3 w-3" /> AI Matcher
                                   </span>
-                                  <p className="text-[10.5px] text-slate-450 leading-normal font-normal line-clamp-2">
+                                  <p className="text-sm text-slate-600 leading-relaxed line-clamp-2">
                                     {inq.aiSummary || 'Analyzed engine fitment matched standard factory clearances. Sourcing valid.'}
                                   </p>
                                 </div>
@@ -875,17 +826,17 @@ export default function DashboardPage() {
                                   {inq.priority === 'urgent' || inq.priority === 'high' || inq.urgency === 'asap' ? (
                                     <div className="flex items-center gap-1">
                                       <span className="h-2 w-2 rounded-full bg-red-500 animate-pulse inline-block" />
-                                      <span className="text-[10.5px] font-bold text-red-500 uppercase tracking-wider">Urgent</span>
+                                      <span className="text-xs font-semibold text-red-500 uppercase">Urgent</span>
                                     </div>
                                   ) : (inq.priority === 'medium' || inq.urgency === 'within_week' ? (
                                     <div className="flex items-center gap-1">
                                       <span className="h-2 w-2 rounded-full bg-amber-400 inline-block" />
-                                      <span className="text-[10.5px] font-medium text-amber-600">Medium</span>
+                                      <span className="text-xs font-medium text-amber-600">Medium</span>
                                     </div>
                                   ) : (
                                     <div className="flex items-center gap-1">
                                       <span className="h-2 w-2 rounded-full bg-[#5DC840] inline-block" />
-                                      <span className="text-[10.5px] text-slate-400">Low</span>
+                                      <span className="text-xs text-slate-500">Low</span>
                                     </div>
                                   ))}
                                 </div>
@@ -893,7 +844,7 @@ export default function DashboardPage() {
 
                               {/* Status Custom badges */}
                               <td className="py-4 px-4 whitespace-nowrap">
-                                <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold border leading-none inline-block ${
+                                <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border leading-none inline-block ${
                                   inq.status === 'new'
                                     ? 'bg-rose-50 text-rose-700 border-rose-200'
                                     : (inq.status === 'in_progress'
@@ -907,7 +858,7 @@ export default function DashboardPage() {
                               </td>
 
                               {/* Date column relative representation */}
-                              <td className="py-4 px-4 text-xs font-medium text-slate-500 whitespace-nowrap font-mono">
+                              <td className="py-4 px-4 text-sm font-medium text-slate-600 whitespace-nowrap">
                                 {formatDate(inq.createdAt)}
                               </td>
 
@@ -919,7 +870,7 @@ export default function DashboardPage() {
                                     e.stopPropagation();
                                     setSelectedInquiry(inq);
                                   }}
-                                  className="text-xs font-bold text-[#1B2A4A] bg-slate-50 hover:bg-slate-100 border border-slate-205 py-1.5 px-3 rounded-lg group-hover:border-[#29B8C8] group-hover:text-[#29B8C8] transition-all"
+                                  className="text-sm font-semibold text-brand-navy bg-slate-50 hover:bg-slate-100 border border-slate-200 py-2 px-3.5 rounded-lg group-hover:border-[#29B8C8] group-hover:text-[#29B8C8] transition-all"
                                   id={`btn-view-${inq.id}`}
                                 >
                                   View
@@ -1231,7 +1182,7 @@ export default function DashboardPage() {
               animate={isMobile ? { y: 0, x: 0 } : { x: 0, y: 0 }}
               exit={isMobile ? { y: '105%', x: 0 } : { x: '105%', y: 0 }}
               transition={{ type: 'spring', damping: 24, stiffness: 210 }}
-              className={`fixed z-50 bg-white shadow-2xl flex flex-col justify-between select-none ${
+              className={`fixed z-50 bg-white shadow-2xl flex flex-col justify-between ${
                 isMobile 
                   ? 'bottom-0 left-0 right-0 h-[88vh] rounded-t-3xl' 
                   : 'top-0 right-0 bottom-0 w-[480px] h-screen'
@@ -1240,14 +1191,12 @@ export default function DashboardPage() {
             >
               
               {/* SLIDE-OVER HEADER */}
-              <div className="p-5 border-b border-slate-200/80 flex items-center justify-between shrink-0">
-                <div className="flex flex-col">
-                  <span className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest leading-none">
-                    Sourcing Ticket Details
-                  </span>
-                  <h3 className="font-heading font-extrabold text-base text-[#1B2A4A] mt-1.5 flex items-center gap-2">
+              <div className="px-6 py-5 border-b border-slate-200 flex items-start justify-between shrink-0 bg-slate-50/60">
+                <div className="flex flex-col gap-2">
+                  <span className="dashboard-detail-eyebrow">Sourcing Ticket Details</span>
+                  <h3 className="dashboard-detail-panel-title flex flex-wrap items-center gap-2.5">
                     {selectedInquiry.id}
-                    <span className={`px-2 py-0.5 rounded-full text-[9px] font-bold border ${
+                    <span className={`px-2.5 py-1 rounded-full text-xs font-semibold border ${
                       selectedInquiry.status === 'new'
                         ? 'bg-rose-50 text-rose-700 border-rose-200'
                         : (selectedInquiry.status === 'in_progress'
@@ -1263,7 +1212,7 @@ export default function DashboardPage() {
                 <button
                   type="button"
                   onClick={() => setSelectedInquiry(null)}
-                  className="p-1.5 hover:bg-slate-50 border border-slate-100 rounded-full transition-colors text-slate-400 hover:text-slate-700"
+                  className="p-2 hover:bg-white border border-slate-200 rounded-full transition-colors text-slate-500 hover:text-slate-700 shrink-0"
                   aria-label="Close detail panel"
                   id="btn-close-slideover"
                 >
@@ -1272,15 +1221,15 @@ export default function DashboardPage() {
               </div>
 
               {/* SLIDE-OVER BODY (Scrollable contents) */}
-              <div className="flex-1 overflow-y-auto p-5 space-y-6 text-xs text-slate-600">
+              <div className="flex-1 overflow-y-auto px-6 py-6 space-y-7 text-sm text-slate-700">
                 
                 {/* Status custom Dropdown workflow */}
-                <div className="bg-slate-50 p-4 rounded-xl border border-slate-150 space-y-2">
-                  <label className="block text-[10px] font-bold text-[#1B2A4A] uppercase tracking-wider">Update Sourcing status workflow</label>
+                <div className="bg-slate-50 p-4 rounded-xl border border-slate-200 space-y-3">
+                  <label className="dashboard-field-label" htmlFor="slideover-status-dropdown">Update sourcing status</label>
                   <select
                     value={selectedInquiry.status}
                     onChange={(e) => updateStatus(selectedInquiry.id, e.target.value)}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg bg-white font-bold text-slate-700 focus:border-[#29B8C8] outline-none"
+                    className="w-full px-4 py-2.5 border border-slate-200 rounded-lg bg-white text-sm font-semibold text-slate-800 focus:border-[#29B8C8] focus:ring-2 focus:ring-[#29B8C8]/15 outline-none"
                     id="slideover-status-dropdown"
                   >
                     <option value="new">🆕 New / Pending Assessment</option>
@@ -1291,89 +1240,89 @@ export default function DashboardPage() {
                 </div>
 
                 {/* Consumer Client information */}
-                <div className="space-y-3">
-                  <h4 className="font-heading font-extrabold text-xs text-[#1B2A4A] uppercase tracking-wider border-b border-slate-100 pb-1.5 flex items-center gap-1.5">
-                    <Users className="h-3.5 w-3.5 text-[#29B8C8]" /> Customer Details
+                <div className="space-y-4">
+                  <h4 className="dashboard-detail-section-title">
+                    <Users className="h-4 w-4 text-brand-teal" /> Customer Details
                   </h4>
-                  <div className="grid grid-cols-2 gap-y-3 font-normal">
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-4">
                     <div>
-                      <span className="text-slate-450 text-[10px] block uppercase leading-none mb-1">Customer name</span>
-                      <strong className="text-slate-705 font-bold text-xs">{selectedInquiry.customerName || 'N/A'}</strong>
+                      <span className="dashboard-detail-label">Customer name</span>
+                      <strong className="dashboard-detail-value">{selectedInquiry.customerName || 'N/A'}</strong>
                     </div>
                     <div>
-                      <span className="text-slate-450 text-[10px] block uppercase leading-none mb-1">Corporate Client</span>
-                      <strong className="text-slate-705 font-bold text-xs uppercase truncate block">{selectedInquiry.company || 'Private Buyer'}</strong>
+                      <span className="dashboard-detail-label">Corporate client</span>
+                      <strong className="dashboard-detail-value uppercase truncate block">{selectedInquiry.company || 'Private Buyer'}</strong>
                     </div>
                     <div>
-                      <span className="text-slate-450 text-[10px] block uppercase leading-none mb-1">Email address</span>
-                      <strong className="text-slate-705 font-medium block truncate select-text">{selectedInquiry.customerEmail || 'N/A'}</strong>
+                      <span className="dashboard-detail-label">Email address</span>
+                      <strong className="dashboard-detail-value font-medium block truncate select-text">{selectedInquiry.customerEmail || 'N/A'}</strong>
                     </div>
                     <div>
-                      <span className="text-slate-450 text-[10px] block uppercase leading-none mb-1">Telephone contact</span>
-                      <strong className="text-slate-705 font-medium block select-text">{selectedInquiry.customerPhone || 'N/A'}</strong>
+                      <span className="dashboard-detail-label">Telephone contact</span>
+                      <strong className="dashboard-detail-value font-medium block select-text">{selectedInquiry.customerPhone || 'N/A'}</strong>
                     </div>
-                    <div>
-                      <span className="text-slate-450 text-[10px] block uppercase leading-none mb-1">Preferred contact method</span>
+                    <div className="col-span-2">
+                      <span className="dashboard-detail-label">Preferred contact method</span>
                       <div>{getContactIcon(selectedInquiry.contactMethod || 'Email')}</div>
                     </div>
                   </div>
                 </div>
 
                 {/* Sourced Vehicle details */}
-                <div className="space-y-3">
-                  <h4 className="font-heading font-extrabold text-xs text-[#1B2A4A] uppercase tracking-wider border-b border-slate-100 pb-1.5 flex items-center gap-1.5">
+                <div className="space-y-4">
+                  <h4 className="dashboard-detail-section-title">
                     <span role="img" aria-label="car-icon">🚗</span> Vehicle Information
                   </h4>
-                  <div className="grid grid-cols-2 gap-y-3 font-normal">
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-4">
                     <div>
-                      <span className="text-slate-450 text-[10px] block uppercase leading-none mb-1 font-bold">Brand / Make</span>
-                      <strong className="text-slate-705 font-bold text-xs">{selectedInquiry.vehicleMake || 'N/A'}</strong>
+                      <span className="dashboard-detail-label">Brand / make</span>
+                      <strong className="dashboard-detail-value">{selectedInquiry.vehicleMake || 'N/A'}</strong>
                     </div>
                     <div>
-                      <span className="text-slate-450 text-[10px] block uppercase leading-none mb-1">Model Name</span>
-                      <strong className="text-slate-705 font-bold text-xs">{selectedInquiry.vehicleModel || 'N/A'}</strong>
+                      <span className="dashboard-detail-label">Model name</span>
+                      <strong className="dashboard-detail-value">{selectedInquiry.vehicleModel || 'N/A'}</strong>
                     </div>
                     <div>
-                      <span className="text-slate-450 text-[10px] block uppercase leading-none mb-1">Manufacture Year</span>
-                      <strong className="text-slate-705 font-bold text-xs font-mono">{selectedInquiry.vehicleYear || 'N/A'}</strong>
+                      <span className="dashboard-detail-label">Manufacture year</span>
+                      <strong className="dashboard-detail-value">{selectedInquiry.vehicleYear || 'N/A'}</strong>
                     </div>
                     <div>
-                      <span className="text-slate-450 text-[10px] block uppercase leading-none mb-1">Engine TRIM / Specs</span>
-                      <strong className="text-[#29B8C8] font-bold text-xs font-mono">{selectedInquiry.vehicleEngine || 'Standard Trim'}</strong>
+                      <span className="dashboard-detail-label">Engine trim / specs</span>
+                      <strong className="text-sm font-semibold text-brand-teal">{selectedInquiry.vehicleEngine || 'Standard Trim'}</strong>
                     </div>
                   </div>
                 </div>
 
                 {/* Parts specifications demand */}
-                <div className="space-y-3">
-                  <h4 className="font-heading font-extrabold text-xs text-[#1B2A4A] uppercase tracking-wider border-b border-slate-100 pb-1.5 flex items-center gap-1.5">
+                <div className="space-y-4">
+                  <h4 className="dashboard-detail-section-title">
                     <span role="img" aria-label="engine-gears">⚙️</span> Parts Required
                   </h4>
-                  <div className="grid grid-cols-2 gap-y-3 font-normal">
+                  <div className="grid grid-cols-2 gap-x-4 gap-y-4">
                     <div>
-                      <span className="text-slate-450 text-[10px] block uppercase leading-none mb-1">Category division</span>
-                      <span className={`px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider inline-block ${getCategoryColor(selectedInquiry.category)}`}>
+                      <span className="dashboard-detail-label">Category</span>
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-semibold uppercase tracking-wide inline-block ${getCategoryColor(selectedInquiry.category)}`}>
                         {selectedInquiry.category || 'Generics'}
                       </span>
                     </div>
                     <div>
-                      <span className="text-slate-450 text-[10px] block uppercase leading-none mb-1 font-bold">Demand Part Name</span>
-                      <strong className="text-slate-705 font-bold text-xs">{selectedInquiry.partName || 'N/A'}</strong>
+                      <span className="dashboard-detail-label">Part name</span>
+                      <strong className="dashboard-detail-value">{selectedInquiry.partName || 'N/A'}</strong>
                     </div>
                     <div>
-                      <span className="text-slate-450 text-[10px] block uppercase leading-none mb-1">Required quantity</span>
-                      <strong className="text-slate-705 font-black text-xs font-mono">{selectedInquiry.quantity || 1} units</strong>
+                      <span className="dashboard-detail-label">Required quantity</span>
+                      <strong className="dashboard-detail-value">{selectedInquiry.quantity || 1} units</strong>
                     </div>
                     <div>
-                      <span className="text-slate-450 text-[10px] block uppercase leading-none mb-1">Wholesale Part number (MPN)</span>
-                      <strong className="text-slate-750 font-bold text-xs font-mono uppercase">{selectedInquiry.partNumber || 'Auto-Sourced (Standard catalog)'}</strong>
+                      <span className="dashboard-detail-label">Part number (MPN)</span>
+                      <strong className="dashboard-detail-value font-mono text-xs uppercase">{selectedInquiry.partNumber || 'Auto-sourced (standard catalog)'}</strong>
                     </div>
                     <div>
-                      <span className="text-slate-450 text-[10px] block uppercase leading-none mb-1">Sourcing Urgency</span>
-                      <span className={`px-2 py-0.5 rounded-full text-[8.5px] font-bold leading-none inline-block border ${
+                      <span className="dashboard-detail-label">Sourcing urgency</span>
+                      <span className={`px-2.5 py-1 rounded-full text-xs font-semibold inline-block border ${
                         selectedInquiry.urgency === 'asap' 
                           ? 'text-rose-600 bg-rose-50 border-rose-200' 
-                          : (selectedInquiry.urgency === 'within_week' ? 'text-orange-600 bg-orange-50 border-orange-100' : 'text-slate-400 bg-slate-55 border-slate-205')
+                          : (selectedInquiry.urgency === 'within_week' ? 'text-orange-600 bg-orange-50 border-orange-100' : 'text-slate-500 bg-slate-100 border-slate-200')
                       }`}>
                         {selectedInquiry.urgency === 'asap' ? 'ASAP / Critical' : (selectedInquiry.urgency === 'within_week' ? 'Within Week' : 'Not Urgent')}
                       </span>
@@ -1382,28 +1331,28 @@ export default function DashboardPage() {
                 </div>
 
                 {/* AI Matching algorithm recommendation */}
-                <div className="space-y-2 border border-[#5DC840]/30 rounded-xl p-4 bg-gradient-to-r from-emerald-50/20 to-[#e0f7fa]/30">
-                  <h5 className="font-bold text-[#3a9e22] text-[10.5px] uppercase tracking-wider flex items-center gap-1 leading-none">
-                    <Sparkles className="h-3.5 w-3.5" strokeWidth="2.5" /> GGS AI Engine Sourcing Analysis
+                <div className="space-y-3 border border-[#5DC840]/30 rounded-xl p-4 bg-gradient-to-r from-emerald-50/40 to-[#e0f7fa]/40">
+                  <h5 className="font-semibold text-[#3a9e22] text-sm flex items-center gap-2">
+                    <Sparkles className="h-4 w-4" strokeWidth="2.5" /> GGS AI Sourcing Analysis
                   </h5>
-                  <p className="text-[#1B2A4A] text-xs font-normal leading-relaxed">
+                  <p className="text-sm text-slate-700 leading-relaxed">
                     {selectedInquiry.aiSummary || 'Automated validation matches this model reference exactly onto factory molds. Compatible materials verified.'}
                   </p>
                 </div>
 
                 {/* Client original notes */}
-                <div className="space-y-2">
-                  <span className="text-slate-450 text-[10px] block uppercase leading-none font-bold">Client original notes</span>
-                  <p className="p-3 bg-slate-50 border border-slate-150 rounded-xl leading-relaxed text-slate-650 font-normal">
+                <div className="space-y-3">
+                  <span className="dashboard-detail-label mb-0">Client original notes</span>
+                  <p className="p-4 bg-slate-50 border border-slate-200 rounded-xl leading-relaxed text-sm text-slate-700">
                     {selectedInquiry.notes || 'No custom notes provided. Routine fitment analysis dispatched.'}
                   </p>
                 </div>
 
                 {/* Client attached pictures */}
                 {selectedInquiry.images && selectedInquiry.images.length > 0 && (
-                  <div className="space-y-2.5">
-                    <span className="text-slate-450 text-[10px] block uppercase leading-none font-bold">Client attached photos ({selectedInquiry.images.length})</span>
-                    <div className="grid grid-cols-2 gap-2">
+                  <div className="space-y-3">
+                    <span className="dashboard-detail-label mb-0">Client attached photos ({selectedInquiry.images.length})</span>
+                    <div className="grid grid-cols-2 gap-3">
                       {selectedInquiry.images.map((_img, index) => (
                         <div 
                           key={index} 
@@ -1416,8 +1365,8 @@ export default function DashboardPage() {
                             className="w-full h-full object-cover group-hover:scale-105 transition-all duration-300"
                             referrerPolicy="no-referrer"
                           />
-                          <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-[10px] font-bold tracking-wider transition-opacity duration-200">
-                            Click to Expand
+                          <div className="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 flex items-center justify-center text-white text-xs font-semibold transition-opacity duration-200">
+                            Click to expand
                           </div>
                         </div>
                       ))}
@@ -1428,53 +1377,53 @@ export default function DashboardPage() {
               </div>
 
               {/* SLIDE-OVER SEND QUOTE ACTION SECTION footer */}
-              <div className="p-5 border-t border-slate-200/80 bg-slate-50/50 space-y-4 shrink-0">
+              <div className="px-6 py-5 border-t border-slate-200 bg-slate-50 space-y-4 shrink-0">
                 {quoteSuccessMsg ? (
                   <motion.div 
                     initial={{ scale: 0.95, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
-                    className="p-3.5 bg-emerald-50 text-[#3a9e22] rounded-xl border border-emerald-200 text-center font-bold text-xs"
+                    className="p-4 bg-emerald-50 text-[#3a9e22] rounded-xl border border-emerald-200 text-center font-semibold text-sm"
                   >
                     {quoteSuccessMsg}
                   </motion.div>
                 ) : (
-                  <div className="space-y-3.5 text-xs font-normal">
-                    <div className="grid grid-cols-2 gap-3">
+                  <div className="space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
                       <div>
-                        <label className="block text-[10px] font-bold text-slate-450 uppercase mb-1">Quote Valuation ($ USD)</label>
+                        <label className="dashboard-detail-label" htmlFor="slideover-quote-amount">Quote valuation (USD)</label>
                         <div className="relative">
-                          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 font-bold text-slate-405">$</span>
+                          <span className="absolute left-3.5 top-1/2 -translate-y-1/2 font-semibold text-slate-500">$</span>
                           <input
                             type="number"
                             value={quoteValue}
                             onChange={(e) => setQuoteValue(e.target.value)}
                             placeholder="750"
-                            className="w-full pl-7 pr-3 py-2 border border-slate-200 rounded-lg outline-none focus:border-[#29B8C8] bg-white font-mono font-bold"
+                            className="w-full pl-7 pr-3 py-2.5 border border-slate-200 rounded-lg outline-none focus:border-[#29B8C8] focus:ring-2 focus:ring-[#29B8C8]/15 bg-white text-sm font-semibold text-slate-800"
                             id="slideover-quote-amount"
                           />
                         </div>
                       </div>
                       <div>
-                        <label className="block text-[10px] font-bold text-slate-450 uppercase mb-1">Lead Time ETA</label>
+                        <label className="dashboard-detail-label" htmlFor="slideover-quote-eta">Lead time ETA</label>
                         <select
                           value={leadTimeDays}
                           onChange={(e) => setLeadTimeDays(e.target.value)}
-                          className="w-full px-3 py-2 border border-slate-200 rounded-lg outline-none focus:border-[#29B8C8] bg-white font-medium"
+                          className="w-full px-3 py-2.5 border border-slate-200 rounded-lg outline-none focus:border-[#29B8C8] focus:ring-2 focus:ring-[#29B8C8]/15 bg-white text-sm font-medium text-slate-800"
                           id="slideover-quote-eta"
                         >
-                          <option value="5 to 8">5 to 8 Transit Days</option>
-                          <option value="12 to 14">12 to 14 Transit Days</option>
-                          <option value="Overnight Air">Overnight Air Cargo</option>
+                          <option value="5 to 8">5 to 8 transit days</option>
+                          <option value="12 to 14">12 to 14 transit days</option>
+                          <option value="Overnight Air">Overnight air cargo</option>
                         </select>
                       </div>
                     </div>
 
-                    <div className="flex gap-2.5 h-10.5">
+                    <div className="flex gap-3">
                       <button
                         type="button"
                         onClick={handleSendQuoteResponse}
                         disabled={isSendingQuote || !quoteValue}
-                        className="flex-1 bg-gradient-to-r from-[#5DC840] to-[#29B8C8] hover:scale-[1.01] transition-all text-white font-bold rounded-full flex items-center justify-center gap-1.5 shadow-md disabled:opacity-40"
+                        className="flex-1 bg-gradient-to-r from-[#5DC840] to-[#29B8C8] hover:scale-[1.01] transition-all text-white text-sm font-semibold py-3 rounded-full flex items-center justify-center gap-2 shadow-md disabled:opacity-40"
                         id="slideover-send-quote-btn"
                       >
                         {isSendingQuote ? (

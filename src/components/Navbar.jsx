@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import Logo from './Logo';
 
 export default function Navbar() {
   const navigate = useNavigate();
@@ -62,35 +63,8 @@ export default function Navbar() {
       >
         <div className="flex items-center justify-between">
           
-          {/* Left: Original restored brand logo + premium corporate wordmark */}
-          <a href="#home" onClick={(e) => handleNavClick(e, '#home')} className="flex items-center gap-3.5 group cursor-pointer">
-            <div className="shrink-0 transition-all duration-500 group-hover:scale-110 group-hover:rotate-12">
-              <svg width="38" height="38" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                {/* Green Globe Background */}
-                <circle cx="48" cy="52" r="34" fill="#5DC840" />
-                {/* White Grid Lines & Node Intersections */}
-                <path d="M48,18 C48,34 48,65 48,86" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M48,18 C33,35 22,55 14,72" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M48,18 C63,35 74,55 82,72" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M16,42 Q48,60 80,42" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-                {/* Nodes */}
-                <circle cx="48" cy="32" r="3.5" fill="white" />
-                <circle cx="28" cy="40" r="3.5" fill="white" />
-                <circle cx="68" cy="40" r="3.5" fill="white" />
-                {/* Teal Orbit Swoosh */}
-                <path d="M3,74 C25,82 50,111 93,22 C97,11 93,13 86,27 C66,61 35,77 3,74 Z" fill="#29B8C8" />
-                {/* Separate Teal Orbit Node */}
-                <circle cx="81" cy="11" r="7.5" fill="#29B8C8" />
-              </svg>
-            </div>
-            <div className="flex flex-col text-left">
-              <span className="font-heading font-black tracking-tight text-[#1B2A4A] leading-none text-sm sm:text-[15px] uppercase">
-                Global Goods <span className="text-[#29B8C8]">&amp;</span> Services
-              </span>
-              <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#5DC840] font-bold leading-none mt-1.5">
-                Pty Ltd
-              </span>
-            </div>
+          <a href="#home" onClick={(e) => handleNavClick(e, '#home')} className="group cursor-pointer shrink-0">
+            <Logo size="md" variant="light" className="transition-transform duration-500 group-hover:scale-[1.02]" />
           </a>
 
           {/* Center: Desktop navigations */}

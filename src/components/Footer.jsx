@@ -1,6 +1,7 @@
 // src/components/Footer.jsx
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import Logo from './Logo';
 
 export default function Footer() {
   const navigate = useNavigate();
@@ -30,33 +31,7 @@ export default function Footer() {
           
           {/* Column 1: Brand & Tagline */}
           <div className="space-y-4">
-            <div className="flex items-center gap-3.5">
-              <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-                {/* Green Globe Background */}
-                <circle cx="48" cy="52" r="34" fill="#5DC840" />
-                {/* White Grid Lines & Node Intersections */}
-                <path d="M48,18 C48,34 48,65 48,86" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M48,18 C33,35 22,55 14,72" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M48,18 C63,35 74,55 82,72" stroke="white" strokeWidth="2.5" strokeLinecap="round" />
-                <path d="M16,42 Q48,60 80,42" stroke="white" strokeWidth="2.5" fill="none" strokeLinecap="round" />
-                {/* Nodes */}
-                <circle cx="48" cy="32" r="3.5" fill="white" />
-                <circle cx="28" cy="40" r="3.5" fill="white" />
-                <circle cx="68" cy="40" r="3.5" fill="white" />
-                {/* Teal Orbit Swoosh */}
-                <path d="M3,74 C25,82 50,111 93,22 C97,11 93,13 86,27 C66,61 35,77 3,74 Z" fill="#29B8C8" />
-                {/* Separate Teal Orbit Node */}
-                <circle cx="81" cy="11" r="7.5" fill="#29B8C8" />
-              </svg>
-              <div className="flex flex-col text-left">
-                <span className="font-heading font-black tracking-tight text-white leading-none text-base uppercase">
-                  Global Goods <span className="text-[#29B8C8]">&amp;</span> Services
-                </span>
-                <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-[#5DC840] font-bold leading-none mt-1.5">
-                  Pty Ltd
-                </span>
-              </div>
-            </div>
+            <Logo size="lg" variant="dark" />
             
             <p className="text-sm font-semibold text-white/95 leading-relaxed italic">
               "Enjoy The Competitive Edge on Everything You Need"
