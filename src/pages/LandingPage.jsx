@@ -31,6 +31,9 @@ import {
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import useScrollAnimation, { fadeInUp } from '../hooks/useScrollAnimation';
+import heroSectionImage1 from '../assets/hero-section image1.jpg';
+import heavyMachineryImage from '../assets/heavy machinery.jpg';
+import industrialEquipmentImage from '../assets/industrial-equipment.jpg';
 
 // Animated Counter component that animates counts when in view
 function AnimatedStat({ value, suffix, label }) {
@@ -103,7 +106,7 @@ const slides = [
   {
     title: "Heavy Equipment Procurement",
     description: "Heavy machinery and production plant loading operations.",
-    img: "https://images.unsplash.com/photo-1541625602330-2277a4c46182?auto=format&fit=crop&w=1000&q=80",
+    img: heavyMachineryImage,
     category: "Heavy Machinery"
   },
   {
@@ -121,7 +124,7 @@ const slides = [
   {
     title: "Vendor Qualification & Quality Assurance",
     description: "Rigorous ISO audits by tier-one engineers inspecting equipment.",
-    img: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?auto=format&fit=crop&w=1000&q=80",
+    img: industrialEquipmentImage,
     category: "Industrial Equipment"
   },
   {
@@ -129,6 +132,30 @@ const slides = [
     description: "Seamless global freight vessel cargo delivery.",
     img: "https://images.unsplash.com/photo-1494412574643-ff11b0a5c1c3?auto=format&fit=crop&w=1000&q=80",
     category: "Global Sourcing"
+  },
+  {
+    title: "Food and Beverage Supply Procurement",
+    description: "Reliable cross-border sourcing for packaged food, beverages, and distribution-ready stock.",
+    img: "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1000&q=80",
+    category: "Food & Beverage"
+  },
+  {
+    title: "Hospitality and Events Sourcing",
+    description: "Procurement support for hotels, venues, and events with quality-checked supplier networks.",
+    img: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1000&q=80",
+    category: "Hospitality & Events"
+  },
+  {
+    title: "Health and Medical Equipment",
+    description: "Trusted sourcing of medical equipment and healthcare-grade supplies for institutional clients.",
+    img: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=1000&q=80",
+    category: "Health & Medical"
+  },
+  {
+    title: "Solar and Renewable Energy Solutions",
+    description: "Strategic sourcing of solar, storage, and renewable system components for commercial deployment.",
+    img: "https://images.unsplash.com/photo-1509391366360-2e959784a276?auto=format&fit=crop&w=1000&q=80",
+    category: "Renewable Energy"
   }
 ];
 
@@ -136,6 +163,14 @@ export default function LandingPage() {
   const navigate = useNavigate();
   const [carouselIndex, setCarouselIndex] = useState(0);
   const timerRef = useRef(null);
+
+  // Quick style switch for the hero savings line: 'editorial' | 'gradient' | 'badge'
+  const savingsLineVariant = 'editorial'; // Change this to 'gradient' or 'badge' for different styles
+  const savingsLineStyles = {
+    editorial: 'mt-4 block border-l-2 border-[#5DC840] pl-3 font-serif text-[13px] sm:text-sm italic leading-relaxed text-[#D6F3C3]',
+    gradient: 'mt-4 block text-sm sm:text-base font-extrabold tracking-tight leading-relaxed text-transparent bg-clip-text bg-gradient-to-r from-[#B8F995] to-[#7EE6FF]',
+    badge: 'mt-3 inline-flex items-center rounded-md border border-[#5DC840]/40 bg-[#5DC840]/10 px-3 py-1.5 font-mono text-[11px] sm:text-xs font-bold uppercase tracking-wider text-[#A7F27D]'
+  };
 
   const resetTimer = () => {
     if (timerRef.current) {
@@ -236,6 +271,9 @@ export default function LandingPage() {
                   className="text-white/75 text-sm sm:text-[15px] leading-relaxed max-w-xl font-normal"
                 >
                   Source products worldwide through a trusted network of suppliers and logistics partners.
+                  <span className={savingsLineStyles[savingsLineVariant]}>
+                    Substantial savings on purchase prices and import duties for customers in SADC and COMESA regions.
+                  </span>
                 </motion.p>
               </div>
 
@@ -248,7 +286,7 @@ export default function LandingPage() {
               >
                 <button 
                   onClick={() => navigate('/inquiry')}
-                  className="text-xs sm:text-sm font-bold text-slate-950 bg-gradient-to-r from-[#5DC840] to-[#29B8C8] hover:shadow-lg hover:shadow-[#29B8C8]/25 hover:brightness-110 active:scale-[0.98] py-4 px-8 rounded-full transition-all inline-flex items-center justify-center gap-2"
+                  className="hero-rfq-shimmer text-xs sm:text-sm font-bold text-slate-950 bg-gradient-to-r from-[#5DC840] to-[#29B8C8] hover:shadow-lg hover:shadow-[#29B8C8]/25 hover:brightness-110 active:scale-[0.98] py-4 px-8 rounded-full transition-all inline-flex items-center justify-center gap-2"
                   id="hero-primary-btn"
                 >
                   <span>Submit an RFQ</span>
@@ -347,7 +385,11 @@ export default function LandingPage() {
                   { label: "Heavy Machinery", index: 0 },
                   { label: "Industrial Equipment", index: 3 },
                   { label: "Shipping & Logistics", index: 1 },
-                  { label: "Warehousing", index: 2 }
+                  { label: "Warehousing", index: 2 },
+                  { label: "Food & Beverage", index: 5 },
+                  { label: "Hospitality & Events", index: 6 },
+                  { label: "Health & Medical", index: 7 },
+                  { label: "Renewable Energy", index: 8 }
                 ].map((btn) => (
                   <button
                     key={btn.label}
@@ -436,7 +478,7 @@ export default function LandingPage() {
             <FeatureCard 
               icon={Wrench}
               title="Specialized &amp; Hard-to-Get Items"
-              description="We procure generic and specialized items including the manufacturing of discontinued parts &mdash; no matter how challenging."
+              description="We procure original, generic and specialized items including the manufacturing of discontinued parts &mdash; no matter how challenging."
               iconBgClass="bg-[#e8f9e3] text-[#3a9e22]"
               delay={0.3}
             />

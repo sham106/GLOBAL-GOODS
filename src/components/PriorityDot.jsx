@@ -1,4 +1,3 @@
-// src/components/PriorityDot.jsx
 import React from 'react';
 
 /**

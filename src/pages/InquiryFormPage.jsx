@@ -24,12 +24,27 @@ export default function InquiryFormPage() {
   
   // Static lists for selections
   const makeList = [
-    'Toyota', 'BMW', 'Ford', 'Mercedes-Benz', 'Volkswagen', 
-    'Honda', 'Nissan', 'Hyundai', 'Mazda', 'Peugeot', 
-    'Renault', 'Mitsubishi', 'Kia', 'Suzuki', 'Subaru', 'Other'
+    'Audi', 'BMW', 'Chevrolet', 'Citroen', 'Daihatsu',
+    'Fiat', 'Ford', 'Foton', 'Geely', 'Great Wall',
+    'Haval', 'Hino', 'Honda', 'Hyundai', 'Isuzu',
+    'Iveco', 'JAC', 'Jaguar', 'Jeep', 'Kia',
+    'Land Rover', 'Lexus', 'MAN', 'Mazda', 'Mercedes-Benz',
+    'Mini', 'Mitsubishi', 'Nissan', 'Opel', 'Peugeot',
+    'Porsche', 'Proton', 'Renault', 'Scania', 'Skoda',
+    'Subaru', 'Suzuki', 'Tata', 'Tesla', 'Toyota',
+    'UD Trucks', 'Volkswagen', 'Volvo', 'Other'
   ];
 
   const yearList = Array.from({ length: 27 }, (_, i) => String(2026 - i));
+
+  const automotiveCategory = 'Automotive Fleet & Parts';
+  const serviceCategories = [
+    'Hospitality and Events Management',
+    'Business and Personal Services'
+  ];
+
+  const isServiceCategory = (category) => serviceCategories.includes(category);
+  const isAutomotiveCategory = (category) => category === automotiveCategory;
 
   // Generate of stable Inquiry Reference ID on Mount
   const [refId] = useState(() => generateRef());
@@ -49,7 +64,7 @@ export default function InquiryFormPage() {
     contactMethod: '',      
 
     // Step 2 — Sourcing Details
-    productCategory: 'Automotive Fleet & Parts',
+    productCategory: automotiveCategory,
     productType: '',
     vehicleMake: '',
     vehicleModel: '',
@@ -80,6 +95,12 @@ export default function InquiryFormPage() {
 
   // AI Suggestion debounce logic on Part Description
   useEffect(() => {
+    if (isServiceCategory(formData.productCategory)) {
+      setAiSuggestion(null);
+      setAiLoading(false);
+      return;
+    }
+
     if (formData.partDescription.length <= 12) {
       setAiSuggestion(null);
       return;
@@ -120,7 +141,20 @@ export default function InquiryFormPage() {
   // Standard input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    if (name === 'productCategory') {
+      const nextIsAutomotive = isAutomotiveCategory(value);
+      setFormData(prev => ({
+        ...prev,
+        [name]: value,
+        productType: nextIsAutomotive ? '' : prev.productType,
+        vehicleMake: nextIsAutomotive ? prev.vehicleMake : '',
+        vehicleModel: nextIsAutomotive ? prev.vehicleModel : '',
+        vehicleYear: nextIsAutomotive ? prev.vehicleYear : '',
+        chassisNumber: nextIsAutomotive ? prev.chassisNumber : ''
+      }));
+    } else {
+      setFormData(prev => ({ ...prev, [name]: value }));
+    }
     if (submitError) setSubmitError('');
     // Clear error for that field immediately
     if (errors[name]) {
@@ -171,28 +205,31 @@ export default function InquiryFormPage() {
     if (currentStep === 2) {
       if (!data.productCategory) {
         newErrors.productCategory = 'Sourcing category is required.';
-      } else if (data.productCategory === 'Automotive Fleet & Parts') {
+      } else if (isAutomotiveCategory(data.productCategory)) {
         if (!data.vehicleMake) newErrors.vehicleMake = 'Vehicle brand/make is required.';
         if (!data.vehicleModel.trim()) newErrors.vehicleModel = 'Vehicle model description is required.';
         if (!data.vehicleYear) newErrors.vehicleYear = 'Vehicle year of manufacture is required.';
       } else {
         if (!data.productType || !data.productType.trim()) {
-          newErrors.productType = 'Product or Equipment Type description is required.';
+          newErrors.productType = isServiceCategory(data.productCategory)
+            ? 'Service requirement description is required.'
+            : 'Product or equipment type description is required.';
         }
       }
     }
 
     if (currentStep === 3) {
       if (!data.partDescription.trim()) {
-        newErrors.partDescription = 'Please describe the part or issue.';
+        newErrors.partDescription = isServiceCategory(data.productCategory)
+          ? 'Please describe the service requirement.'
+          : 'Please describe the part or issue.';
       } else if (data.partDescription.trim().length < 10) {
         newErrors.partDescription = 'Please provide a clearer specification (at least 10 characters).';
       }
       if (!data.partName.trim()) {
-        newErrors.partName = 'Please enter a name for the part.';
-      }
-      if (!data.urgency) {
-        newErrors.urgency = 'Please select how urgent this request is.';
+        newErrors.partName = isServiceCategory(data.productCategory)
+          ? 'Please enter a service name.'
+          : 'Please enter a name for the part.';
       }
     }
 
@@ -217,7 +254,6 @@ export default function InquiryFormPage() {
     productType: 'product-type-input',
     partDescription: 'part-desc-textarea',
     partName: 'part-name-input',
-    urgency: 'urgency-section',
   };
 
   const scrollToFirstError = (errorFields) => {
@@ -396,7 +432,7 @@ export default function InquiryFormPage() {
       contactNumber: '',
       email: '',
       contactMethod: '',      
-      productCategory: 'Automotive Fleet & Parts',
+      productCategory: automotiveCategory,
       productType: '',
       vehicleMake: '',
       vehicleModel: '',
@@ -663,7 +699,7 @@ export default function InquiryFormPage() {
                     What are you sourcing?
                   </h2>
                   <p className="text-gray-500 text-sm mt-1" id="step2-subtitle">
-                    We source automotive parts, industrial equipment, MRO supplies, machinery and more. Fill in what you can.
+                    We source both products and services. Choose a category, then provide the relevant details.
                   </p>
                 </div>
 
@@ -673,33 +709,43 @@ export default function InquiryFormPage() {
                     <label className={labelStyle}>Product Category</label>
                     <select
                       name="productCategory"
-                      value={formData.productCategory || 'Automotive Fleet & Parts'}
+                      value={formData.productCategory || automotiveCategory}
                       onChange={handleChange}
                       className={inputStyle('productCategory')}
                       id="product-category-select"
                     >
                       <option value="">Select category...</option>
-                      <option value="Automotive Fleet & Parts">Automotive Fleet &amp; Parts</option>
-                      <option value="Heavy Duty Machinery & Equipment">Heavy Duty Machinery &amp; Equipment</option>
-                      <option value="MRO Supplies (Maintenance, Repair & Operating)">MRO Supplies (Maintenance, Repair &amp; Operating)</option>
-                      <option value="Building & Construction Materials">Building &amp; Construction Materials</option>
-                      <option value="Electrical & Electronic Equipment">Electrical &amp; Electronic Equipment</option>
-                      <option value="Mining Equipment">Mining Equipment</option>
-                      <option value="Oil & Gas Equipment">Oil &amp; Gas Equipment</option>
-                      <option value="Pharmaceutical & Medical Equipment">Pharmaceutical &amp; Medical Equipment</option>
-                      <option value="HVAC-R Equipment">HVAC-R Equipment</option>
-                      <option value="Networks & Communication Equipment">Networks &amp; Communication Equipment</option>
-                      <option value="Rolling Stock">Rolling Stock</option>
-                      <option value="Safety & Security Equipment">Safety &amp; Security Equipment</option>
-                      <option value="Clean Energy Technologies">Clean Energy Technologies</option>
-                      <option value="Industrial Products & Equipment">Industrial Products &amp; Equipment</option>
-                      <option value="Other / Not Listed">Other / Not Listed</option>
+                      <optgroup label="Services">
+                        <option value="Hospitality and Events Management">Hospitality and Events Management</option>
+                        <option value="Business and Personal Services">Business and Personal Services (Vehicle License Renewal, Passport, Identity Document, Birth Certificate, Visas etc)</option>
+                      </optgroup>
+                      <optgroup label="Products">
+                        <option value="Food and Beverage">Food and Beverage</option>
+                        <option value="Health and Medical Equipment">Health and Medical Equipment</option>
+                        <option value="Furniture and Interior Decor">Furniture and Interior Decor</option>
+                        <option value="Solar and Renewable Energy">Solar and Renewable Energy</option>
+                        <option value="Automotive Fleet & Parts">Automotive Fleet &amp; Parts</option>
+                        <option value="Heavy Duty Machinery & Equipment">Heavy Duty Machinery &amp; Equipment</option>
+                        <option value="MRO Supplies (Maintenance, Repair & Operating)">MRO Supplies (Maintenance, Repair &amp; Operating)</option>
+                        <option value="Building & Construction Materials">Building &amp; Construction Materials</option>
+                        <option value="Electrical & Electronic Equipment">Electrical &amp; Electronic Equipment</option>
+                        <option value="Mining Equipment">Mining Equipment</option>
+                        <option value="Oil & Gas Equipment">Oil &amp; Gas Equipment</option>
+                        <option value="Pharmaceutical & Medical Equipment">Pharmaceutical &amp; Medical Equipment</option>
+                        <option value="HVAC-R Equipment">HVAC-R Equipment</option>
+                        <option value="Networks & Communication Equipment">Networks &amp; Communication Equipment</option>
+                        <option value="Rolling Stock">Rolling Stock</option>
+                        <option value="Safety & Security Equipment">Safety &amp; Security Equipment</option>
+                        <option value="Clean Energy Technologies">Clean Energy Technologies</option>
+                        <option value="Industrial Products & Equipment">Industrial Products &amp; Equipment</option>
+                        <option value="Other / Not Listed">Other / Not Listed</option>
+                      </optgroup>
                     </select>
                     {errors.productCategory && <p className="text-red-500 text-xs mt-1">{errors.productCategory}</p>}
                   </div>
 
                   {/* Hide/Show logic based on selection */}
-                  {(formData.productCategory === 'Automotive Fleet & Parts' || !formData.productCategory) ? (
+                  {(isAutomotiveCategory(formData.productCategory) || !formData.productCategory) ? (
                     <>
                       {/* Make + Model Grid */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -780,13 +826,19 @@ export default function InquiryFormPage() {
                     </>
                   ) : (
                     <div>
-                      <label className={labelStyle}>Product / Equipment Type</label>
+                      <label className={labelStyle}>
+                        {isServiceCategory(formData.productCategory) ? 'Service Required' : 'Product / Equipment Type'}
+                      </label>
                       <input
                         type="text"
                         name="productType"
                         value={formData.productType || ''}
                         onChange={handleChange}
-                        placeholder="e.g. 50kW diesel generator, 6-inch gate valve, hydraulic pump model XYZ..."
+                        placeholder={
+                          isServiceCategory(formData.productCategory)
+                            ? 'e.g. Corporate event setup, visa processing for 4 travelers, passport renewal assistance...'
+                            : 'e.g. 50kW diesel generator, 6-inch gate valve, hydraulic pump model XYZ...'
+                        }
                         className={inputStyle('productType')}
                         id="product-type-input"
                       />
@@ -810,10 +862,12 @@ export default function InquiryFormPage() {
               >
                 <div>
                   <h2 className="font-heading text-xl sm:text-2xl font-extrabold text-[#1B2A4A] tracking-tight">
-                    Specify Your Items
+                    {isServiceCategory(formData.productCategory) ? 'Specify Your Requirements' : 'Specify Your Items'}
                   </h2>
                   <p className="text-gray-500 text-xs mt-1 mb-1">
-                    Detail the exact parts, quantities, and preferred brands you require. Our tech matchmaking starts immediately.
+                    {isServiceCategory(formData.productCategory)
+                      ? 'Share scope, quantity, and timelines so our team can match and quote quickly.'
+                      : 'Detail the exact parts, quantities, and preferred brands you require. Our tech matchmaking starts immediately.'}
                   </p>
                 </div>
 
@@ -821,13 +875,19 @@ export default function InquiryFormPage() {
                   
                   {/* Part Description text-area */}
                   <div>
-                    <label className={labelStyle}>Describe the part or issue</label>
+                    <label className={labelStyle}>
+                      {isServiceCategory(formData.productCategory) ? 'Describe your service requirement' : 'Describe the part or issue'}
+                    </label>
                     <textarea
                       name="partDescription"
                       rows="3"
                       value={formData.partDescription}
                       onChange={handleChange}
-                      placeholder="e.g. My car won't start in the morning, I think it's the starter motor or battery..."
+                      placeholder={
+                        isServiceCategory(formData.productCategory)
+                          ? 'e.g. Need assistance for 6 visa applications and travel documentation before 15 August...'
+                          : 'e.g. My car won\'t start in the morning, I think it\'s the starter motor or battery...'
+                      }
                       className={inputStyle('partDescription')}
                       id="part-desc-textarea"
                     />
@@ -891,13 +951,13 @@ export default function InquiryFormPage() {
                   {/* Part Name & Number */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label className={labelStyle}>Part Name</label>
+                      <label className={labelStyle}>{isServiceCategory(formData.productCategory) ? 'Service Name' : 'Part Name'}</label>
                       <input
                         type="text"
                         name="partName"
                         value={formData.partName}
                         onChange={handleChange}
-                        placeholder="e.g. Starter Motor"
+                        placeholder={isServiceCategory(formData.productCategory) ? 'e.g. Visa Processing Service' : 'e.g. Starter Motor'}
                         className={inputStyle('partName')}
                         id="part-name-input"
                       />
@@ -906,7 +966,7 @@ export default function InquiryFormPage() {
 
                     <div>
                       <label className={labelStyle}>
-                        Part Number / MPN
+                        {isServiceCategory(formData.productCategory) ? 'Reference Number' : 'Part Number / MPN'}
                         <span className="text-gray-400 font-normal normal-case text-xs inline ml-1">(optional)</span>
                       </label>
                       <input
@@ -914,7 +974,7 @@ export default function InquiryFormPage() {
                         name="partNumber"
                         value={formData.partNumber}
                         onChange={handleChange}
-                        placeholder="e.g. 28100-0L010"
+                        placeholder={isServiceCategory(formData.productCategory) ? 'e.g. Service code or internal reference' : 'e.g. 28100-0L010'}
                         className={`${inputStyle('partNumber')} font-mono`}
                         id="part-number-input"
                       />
@@ -934,78 +994,6 @@ export default function InquiryFormPage() {
                       className="w-full px-3.5 py-2.5 border-[1.5px] border-slate-200 rounded-lg text-xs bg-gray-50/50 focus:bg-white focus:border-[#29B8C8] outline-none font-semibold font-mono"
                       id="qty-input"
                     />
-                  </div>
-
-                  {/* Sourcing Urgency Selector */}
-                  <div className="space-y-1.5" id="urgency-section">
-                    <label className={labelStyle}>How urgent is this?</label>
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                      
-                      {/* LOW */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setFormData(prev => ({ ...prev, urgency: 'not_urgent' }));
-                          if (errors.urgency) setErrors(p => { const c = { ...p }; delete c.urgency; return c; });
-                        }}
-                        className={`text-left p-3.5 rounded-xl border-[1.5px] transition-all flex flex-col justify-between h-20 ${
-                          formData.urgency === 'not_urgent'
-                            ? 'border-[#29B8C8] bg-[#e0f7fa]'
-                            : 'border-slate-200 bg-gray-50/30 hover:border-[#29B8C8]/60 hover:bg-slate-50'
-                        }`}
-                        id="urgency-low-btn"
-                      >
-                        <span className="text-base">🕐</span>
-                        <div>
-                          <p className="font-bold text-[#1B2A4A] text-xs">Not Urgent</p>
-                          <p className="text-[9px] text-slate-450 font-normal">Flexible timing</p>
-                        </div>
-                      </button>
-
-                      {/* MEDIUM */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setFormData(prev => ({ ...prev, urgency: 'within_week' }));
-                          if (errors.urgency) setErrors(p => { const c = { ...p }; delete c.urgency; return c; });
-                        }}
-                        className={`text-left p-3.5 rounded-xl border-[1.5px] transition-all flex flex-col justify-between h-20 ${
-                          formData.urgency === 'within_week'
-                            ? 'border-[#29B8C8] bg-[#e0f7fa]'
-                            : 'border-slate-200 bg-gray-50/30 hover:border-[#29B8C8]/60 hover:bg-slate-50'
-                        }`}
-                        id="urgency-medium-btn"
-                      >
-                        <span className="text-base">📅</span>
-                        <div>
-                          <p className="font-bold text-[#1B2A4A] text-xs">Within a Week</p>
-                          <p className="text-[9px] text-slate-450 font-normal">Standard request</p>
-                        </div>
-                      </button>
-
-                      {/* ASAP */}
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setFormData(prev => ({ ...prev, urgency: 'asap' }));
-                          if (errors.urgency) setErrors(p => { const c = { ...p }; delete c.urgency; return c; });
-                        }}
-                        className={`text-left p-3.5 rounded-xl border-[1.5px] transition-all flex flex-col justify-between h-20 ${
-                          formData.urgency === 'asap'
-                            ? 'border-[#29B8C8] bg-[#e0f7fa]'
-                            : 'border-slate-200 bg-gray-50/30 hover:border-[#29B8C8]/60 hover:bg-slate-50'
-                        }`}
-                        id="urgency-asap-btn"
-                      >
-                        <span className="text-base">🚨</span>
-                        <div>
-                          <p className="font-bold text-[#1B2A4A] text-xs">ASAP</p>
-                          <p className="text-[9px] text-slate-450 font-normal">Vehicle off road</p>
-                        </div>
-                      </button>
-
-                    </div>
-                    {errors.urgency && <p className="text-red-500 text-[11px] mt-1">{errors.urgency}</p>}
                   </div>
 
                   {/* Additional Notes (Optional) */}
