@@ -286,7 +286,7 @@ export default function LandingPage() {
               >
                 <button 
                   onClick={() => navigate('/inquiry')}
-                  className="hero-rfq-shimmer text-xs sm:text-sm font-bold text-slate-950 bg-gradient-to-r from-[#5DC840] to-[#29B8C8] hover:shadow-lg hover:shadow-[#29B8C8]/25 hover:brightness-110 active:scale-[0.98] py-4 px-8 rounded-full transition-all inline-flex items-center justify-center gap-2"
+                  className="hero-rfq-elastic text-xs sm:text-sm font-bold text-slate-950 bg-gradient-to-r from-[#5DC840] to-[#29B8C8] hover:shadow-lg hover:shadow-[#29B8C8]/25 hover:brightness-110 active:scale-[0.98] py-4 px-8 rounded-full transition-all inline-flex items-center justify-center gap-2"
                   id="hero-primary-btn"
                 >
                   <span>Submit an RFQ</span>
@@ -604,7 +604,7 @@ export default function LandingPage() {
           <div className="pt-3">
             <button 
               onClick={() => navigate('/inquiry')}
-              className="text-sm font-bold text-slate-900 bg-gradient-to-r from-[#5DC840] to-[#29B8C8] hover:shadow-xl hover:brightness-105 active:scale-[0.98] py-4 px-10 rounded-full transition-all text-white"
+              className="hero-rfq-elastic text-sm font-bold text-slate-900 bg-gradient-to-r from-[#5DC840] to-[#29B8C8] hover:shadow-xl hover:brightness-105 active:scale-[0.98] py-4 px-10 rounded-full transition-all text-white"
               id="cta-submit-btn"
             >
               Submit an RFQ Now &rarr;
