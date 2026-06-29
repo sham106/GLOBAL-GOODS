@@ -7,7 +7,6 @@ import {
   Check, 
   Trash2, 
   Image as ImageIcon, 
-  Sparkles, 
   Clock, 
   CheckCircle2, 
   HelpCircle,
@@ -83,8 +82,6 @@ export default function InquiryFormPage() {
 
   // UI state
   const [errors, setErrors] = useState({});
-  const [aiSuggestion, setAiSuggestion] = useState(null);
-  const [aiLoading, setAiLoading] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreviews, setImagePreviews] = useState([]);
   const [isDragging, setIsDragging] = useState(false);
@@ -92,51 +89,6 @@ export default function InquiryFormPage() {
   const fileInputRef = useRef(null);
   const formFooterRef = useRef(null);
   const [submitError, setSubmitError] = useState('');
-
-  // AI Suggestion debounce logic on Part Description
-  useEffect(() => {
-    if (isServiceCategory(formData.productCategory)) {
-      setAiSuggestion(null);
-      setAiLoading(false);
-      return;
-    }
-
-    if (formData.partDescription.length <= 12) {
-      setAiSuggestion(null);
-      return;
-    }
-
-    setAiLoading(true);
-    const timer = setTimeout(() => {
-      setAiLoading(false);
-      // Give a highly descriptive context based on keywords to look like smart AI
-      const desc = formData.partDescription.toLowerCase();
-      let detectedPart = "Starter Motor";
-      let category = "Electrical & Ignition";
-
-      if (desc.includes('brake') || desc.includes('caliper') || desc.includes('rotor')) {
-        detectedPart = "Heavy Duty Brake Calipers";
-        category = "Braking Systems";
-      } else if (desc.includes('suspension') || desc.includes('shock') || desc.includes('strut')) {
-        detectedPart = "Pneumatic Suspension Strut";
-        category = "Suspension & Steering";
-      } else if (desc.includes('engine') || desc.includes('cylinder') || desc.includes('piston')) {
-        detectedPart = "Engine Piston Ring Set";
-        category = "Engine & Drivetrain";
-      } else if (desc.includes('spark') || desc.includes('battery') || desc.includes('alternator')) {
-        detectedPart = "High-Output Alternator Unit";
-        category = "Electrical & Sensors";
-      }
-
-      setAiSuggestion({
-        partName: detectedPart,
-        category: category,
-        text: `Based on your description, our classifier matches this request closely to a high-integrity ${detectedPart}. Category: ${category}. This match ensures OEM spacing and direct drop-in setup.`
-      });
-    }, 1200);
-
-    return () => clearTimeout(timer);
-  }, [formData.partDescription]);
 
   // Standard input changes
   const handleChange = (e) => {
@@ -349,7 +301,7 @@ export default function InquiryFormPage() {
   const handleSubmitInquiry = () => {
     const submissionData = {
       ...formData,
-      partName: formData.partName.trim() || aiSuggestion?.partName || '',
+      partName: formData.partName.trim(),
     };
 
     if (submissionData.partName !== formData.partName) {
@@ -373,7 +325,7 @@ export default function InquiryFormPage() {
         const existingRaw = localStorage.getItem(localInquiriesKey);
         const list = existingRaw ? JSON.parse(existingRaw) : [];
 
-        const mappedCategory = aiSuggestion?.category || submissionData.productCategory || 'General Mechanics';
+        const mappedCategory = submissionData.productCategory || 'General Mechanics';
 
         const newRecord = {
           id: refId,
@@ -396,10 +348,6 @@ export default function InquiryFormPage() {
           contactMethod: submissionData.contactMethod,
           company: submissionData.companyName || null,
           images: imagePreviews,
-          aiSummary: aiSuggestion
-            ? aiSuggestion.text
-            : `Automated matching resolved for ${submissionData.partName}. Certified safety checks pending standard dispatch queue.`,
-          aiCategory: mappedCategory,
         };
 
         list.unshift(newRecord);
@@ -448,7 +396,6 @@ export default function InquiryFormPage() {
     });
     setErrors({});
     setSubmitError('');
-    setAiSuggestion(null);
     setImagePreviews([]);
     setStep(1);
     // Reload a new reference ID
@@ -894,59 +841,7 @@ export default function InquiryFormPage() {
                     {errors.partDescription && <p className="text-red-500 text-[11px] mt-1">{errors.partDescription}</p>}
                   </div>
 
-                  {/* AI Suggestion Container */}
-                  {aiLoading && (
-                    <div className="h-16 rounded-xl animate-pulse bg-gradient-to-r from-teal-50 to-emerald-50/50 border border-[#29B8C8]/10 flex items-center justify-center">
-                      <div className="flex items-center gap-2">
-                        <span className="h-4 w-4 rounded-full border-2 border-[#29B8C8] border-t-transparent animate-spin shrink-0" />
-                        <span className="text-xs text-[#29B8C8] font-bold tracking-wider font-mono uppercase">AI Matcher Classifying...</span>
-                      </div>
-                    </div>
-                  )}
 
-                  {aiSuggestion && !aiLoading && (
-                    <motion.div 
-                      initial={{ scale: 0.95, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      className="border border-[#5DC840] rounded-xl p-3.5 bg-gradient-to-r from-[#e8f9e3] to-[#e0f7fa] relative"
-                    >
-                      <div className="flex items-start gap-2.5">
-                        <span className="text-xl leading-none" role="img" aria-label="Robot logo">🤖</span>
-                        <div className="space-y-1">
-                          <strong className="text-[#3a9e22] text-[11px] font-bold uppercase tracking-wider flex items-center gap-1">
-                            <Sparkles className="h-3.5 w-3.5" /> Ideal AI Candidate Sensed
-                          </strong>
-                          <p className="text-[#1B2A4A] text-xs font-normal leading-relaxed">
-                            {aiSuggestion.text}
-                          </p>
-                          <div className="flex gap-2.5 pt-2">
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setFormData(prev => ({ 
-                                  ...prev, 
-                                  partName: aiSuggestion.partName 
-                                }));
-                                setAiSuggestion(null);
-                              }}
-                              className="bg-[#5DC840] hover:bg-[#53b239] hover:shadow-sm text-white text-[10px] font-bold rounded-full px-3 py-1.5 transition-all flex items-center gap-1 fill-white"
-                              id="approve-ai-btn"
-                            >
-                              <Check className="h-3 w-3 stroke-[3]" /> Yes, that's it
-                            </button>
-                            <button
-                              type="button"
-                              onClick={() => setAiSuggestion(null)}
-                              className="border border-slate-350 bg-white/70 hover:bg-white text-slate-500 hover:text-slate-700 text-[10px] font-bold rounded-full px-3 py-1.5 transition-all"
-                              id="dismiss-ai-btn"
-                            >
-                              No, I'll specify manually
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </motion.div>
-                  )}
 
                   {/* Part Name & Number */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
