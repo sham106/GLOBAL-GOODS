@@ -1082,8 +1082,8 @@ export default function InquiryFormPage() {
                       <strong className="text-slate-705 font-medium">{formData.partName || 'N/A'} (x {formData.quantity})</strong>
                     </div>
                     <div>
-                      <span className="text-slate-400 block text-[10px]">URGENCY</span>
-                      <strong className="text-[#3a9e22] font-semibold">{formData.urgency === 'asap' ? 'ASAP / Urgent' : (formData.urgency === 'within_week' ? 'Within 1 Week' : 'Flexible') }</strong>
+                      <span className="text-slate-400 block text-[10px]">CONTACT METHOD</span>
+                      <strong className="text-slate-705 font-medium">{formData.contactMethod || 'N/A'}</strong>
                     </div>
                     <div>
                       <span className="text-slate-400 block text-[10px]">PRIMARY EMAIL</span>
