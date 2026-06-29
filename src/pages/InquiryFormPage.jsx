@@ -76,7 +76,6 @@ export default function InquiryFormPage() {
     partNumber: '',
     quantity: 1,
     urgency: '',
-    notes: '',
     images: [] // Array of File objects
   });
 
@@ -171,13 +170,6 @@ export default function InquiryFormPage() {
     }
 
     if (currentStep === 3) {
-      if (!data.partDescription.trim()) {
-        newErrors.partDescription = isServiceCategory(data.productCategory)
-          ? 'Please describe the service requirement.'
-          : 'Please describe the part or issue.';
-      } else if (data.partDescription.trim().length < 10) {
-        newErrors.partDescription = 'Please provide a clearer specification (at least 10 characters).';
-      }
       if (!data.partName.trim()) {
         newErrors.partName = isServiceCategory(data.productCategory)
           ? 'Please enter a service name.'
@@ -341,7 +333,7 @@ export default function InquiryFormPage() {
           partNumber: submissionData.partNumber || 'Auto-Sourced',
           quantity: parseInt(submissionData.quantity, 10) || 1,
           urgency: submissionData.urgency,
-          notes: submissionData.partDescription + (submissionData.notes ? ` | Additional note: ${submissionData.notes}` : ''),
+          notes: submissionData.partDescription,
           customerName: `${submissionData.firstName} ${submissionData.lastName}`,
           customerEmail: submissionData.email,
           customerPhone: submissionData.contactNumber,
@@ -391,7 +383,6 @@ export default function InquiryFormPage() {
       partNumber: '',
       quantity: 1,
       urgency: '',
-      notes: '',
       images: []
     });
     setErrors({});
@@ -824,6 +815,7 @@ export default function InquiryFormPage() {
                   <div>
                     <label className={labelStyle}>
                       {isServiceCategory(formData.productCategory) ? 'Describe your service requirement' : 'Describe the part or issue'}
+                      <span className="text-gray-400 font-normal normal-case text-xs inline ml-1">(optional)</span>
                     </label>
                     <textarea
                       name="partDescription"
@@ -838,7 +830,6 @@ export default function InquiryFormPage() {
                       className={inputStyle('partDescription')}
                       id="part-desc-textarea"
                     />
-                    {errors.partDescription && <p className="text-red-500 text-[11px] mt-1">{errors.partDescription}</p>}
                   </div>
 
 
@@ -888,23 +879,6 @@ export default function InquiryFormPage() {
                       onChange={handleChange}
                       className="w-full px-3.5 py-2.5 border-[1.5px] border-slate-200 rounded-lg text-xs bg-gray-50/50 focus:bg-white focus:border-[#29B8C8] outline-none font-semibold font-mono"
                       id="qty-input"
-                    />
-                  </div>
-
-                  {/* Additional Notes (Optional) */}
-                  <div>
-                    <label className={labelStyle}>
-                      Additional Notes
-                      <span className="text-gray-400 font-normal normal-case text-xs inline ml-1">(optional)</span>
-                    </label>
-                    <textarea
-                      name="notes"
-                      rows="2"
-                      value={formData.notes}
-                      onChange={handleChange}
-                      placeholder="Any other details — OEM preference, budget range, specific supplier, colour, etc."
-                      className={inputStyle('notes')}
-                      id="additional-notes-textarea"
                     />
                   </div>
 
