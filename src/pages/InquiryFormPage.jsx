@@ -38,7 +38,6 @@ export default function InquiryFormPage() {
 
   const automotiveCategory = 'Automotive Fleet & Parts';
   const serviceCategories = [
-    'Hospitality and Events Management',
     'Business and Personal Services'
   ];
 
@@ -654,10 +653,10 @@ export default function InquiryFormPage() {
                     >
                       <option value="">Select category...</option>
                       <optgroup label="Services">
-                        <option value="Hospitality and Events Management">Hospitality and Events Management</option>
                         <option value="Business and Personal Services">Business and Personal Services (Vehicle License Renewal, Passport, Identity Document, Birth Certificate, Visas etc)</option>
                       </optgroup>
                       <optgroup label="Products">
+                        <option value="Hospitality and Event Management Supplies">Hospitality and Event Management Supplies</option>
                         <option value="Food and Beverage">Food and Beverage</option>
                         <option value="Health and Medical Equipment">Health and Medical Equipment</option>
                         <option value="Furniture and Interior Decor">Furniture and Interior Decor</option>
