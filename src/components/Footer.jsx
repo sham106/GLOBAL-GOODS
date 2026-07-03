@@ -204,7 +204,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="pt-8 flex flex-col md:flex-row items-center justify-between text-xs text-slate-500 gap-4">
           <p className="text-center md:text-left leading-relaxed">
-            &copy; 2025 Global Goods &amp; Services Pty Ltd. All rights reserved.
+            &copy; 2026 Global Goods &amp; Services Pty Ltd. All rights reserved.
             <span className="hidden sm:inline"> · South Africa · Mauritius · Namibia</span>
           </p>
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 font-medium">

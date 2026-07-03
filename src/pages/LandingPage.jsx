@@ -34,6 +34,7 @@ import useScrollAnimation, { fadeInUp } from '../hooks/useScrollAnimation';
 import heroSectionImage1 from '../assets/hero-section image1.jpg';
 import heavyMachineryImage from '../assets/heavy machinery.jpg';
 import industrialEquipmentImage from '../assets/industrial-equipment.jpg';
+import hospitalitySuppliesImage from '../assets/hospitality-supplies.jpg';
 
 // Animated Counter component that animates counts when in view
 function AnimatedStat({ value, suffix, label }) {
@@ -142,7 +143,7 @@ const slides = [
   {
     title: "Hospitality and Events Sourcing",
     description: "Procurement support for hotels, venues, and events with quality-checked supplier networks.",
-    img: "https://images.unsplash.com/photo-1511578314322-379afb476865?auto=format&fit=crop&w=1000&q=80",
+    img: hospitalitySuppliesImage,
     category: "Hospitality & Events"
   },
   {

@@ -656,26 +656,26 @@ export default function InquiryFormPage() {
                         <option value="Business and Personal Services">Business and Personal Services (Vehicle License Renewal, Passport, Identity Document, Birth Certificate, Visas etc)</option>
                       </optgroup>
                       <optgroup label="Products">
-                        <option value="Hospitality and Event Management Supplies">Hospitality and Event Management Supplies</option>
-                        <option value="Food and Beverage">Food and Beverage</option>
-                        <option value="Health and Medical Equipment">Health and Medical Equipment</option>
-                        <option value="Furniture and Interior Decor">Furniture and Interior Decor</option>
-                        <option value="Solar and Renewable Energy">Solar and Renewable Energy</option>
                         <option value="Automotive Fleet & Parts">Automotive Fleet &amp; Parts</option>
-                        <option value="Heavy Duty Machinery & Equipment">Heavy Duty Machinery &amp; Equipment</option>
-                        <option value="MRO Supplies (Maintenance, Repair & Operating)">MRO Supplies (Maintenance, Repair &amp; Operating)</option>
                         <option value="Building & Construction Materials">Building &amp; Construction Materials</option>
+                        <option value="Clean Energy Technologies">Clean Energy Technologies</option>
                         <option value="Electrical & Electronic Equipment">Electrical &amp; Electronic Equipment</option>
-                        <option value="Mining Equipment">Mining Equipment</option>
-                        <option value="Oil & Gas Equipment">Oil &amp; Gas Equipment</option>
-                        <option value="Pharmaceutical & Medical Equipment">Pharmaceutical &amp; Medical Equipment</option>
+                        <option value="Food and Beverage">Food and Beverage</option>
+                        <option value="Furniture and Interior Decor">Furniture and Interior Decor</option>
                         <option value="HVAC-R Equipment">HVAC-R Equipment</option>
+                        <option value="Health and Medical Equipment">Health and Medical Equipment</option>
+                        <option value="Heavy Duty Machinery & Equipment">Heavy Duty Machinery &amp; Equipment</option>
+                        <option value="Hospitality and Event Management Supplies">Hospitality and Event Management Supplies</option>
+                        <option value="Industrial Products & Equipment">Industrial Products &amp; Equipment</option>
+                        <option value="Mining Equipment">Mining Equipment</option>
+                        <option value="MRO Supplies (Maintenance, Repair & Operating)">MRO Supplies (Maintenance, Repair &amp; Operating)</option>
                         <option value="Networks & Communication Equipment">Networks &amp; Communication Equipment</option>
+                        <option value="Oil & Gas Equipment">Oil &amp; Gas Equipment</option>
+                        <option value="Other / Not Listed">Other / Not Listed</option>
+                        <option value="Pharmaceutical & Medical Equipment">Pharmaceutical &amp; Medical Equipment</option>
                         <option value="Rolling Stock">Rolling Stock</option>
                         <option value="Safety & Security Equipment">Safety &amp; Security Equipment</option>
-                        <option value="Clean Energy Technologies">Clean Energy Technologies</option>
-                        <option value="Industrial Products & Equipment">Industrial Products &amp; Equipment</option>
-                        <option value="Other / Not Listed">Other / Not Listed</option>
+                        <option value="Solar and Renewable Energy">Solar and Renewable Energy</option>
                       </optgroup>
                     </select>
                     {errors.productCategory && <p className="text-red-500 text-xs mt-1">{errors.productCategory}</p>}
