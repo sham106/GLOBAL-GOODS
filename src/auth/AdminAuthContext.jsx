@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useMemo, useState } from 'react';
-import { supabase } from '../lib/supabase';
+import { supabase, supabaseConfigError } from '../lib/supabase';
 
 const AdminAuthContext = createContext(null);
 
@@ -19,6 +19,11 @@ export function AdminAuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (!supabase) {
+      setLoading(false);
+      return;
+    }
+
     let mounted = true;
 
     const initialize = async () => {
@@ -53,8 +58,19 @@ export function AdminAuthProvider({ children }) {
       isAuthenticated: Boolean(session),
       isAdmin,
       accessToken: session?.access_token || null,
-      signIn: (email, password) => supabase.auth.signInWithPassword({ email, password }),
-      signOut: () => supabase.auth.signOut(),
+      signIn: async (email, password) => {
+        if (!supabase) {
+          return {
+            data: { user: null, session: null },
+            error: new Error(supabaseConfigError || 'Supabase is not configured.'),
+          };
+        }
+        return supabase.auth.signInWithPassword({ email, password });
+      },
+      signOut: async () => {
+        if (!supabase) return { error: null };
+        return supabase.auth.signOut();
+      },
     };
   }, [loading, session]);
 
