@@ -16,6 +16,7 @@ import {
   CheckSquare
 } from 'lucide-react';
 import { generateRef } from '../utils/generateRef';
+import { createInquiry } from '../utils/api';
 import Logo from '../components/Logo';
 
 export default function InquiryFormPage() {
@@ -289,7 +290,7 @@ export default function InquiryFormPage() {
   };
 
   // High-fidelity Submit handler (step 3 submit)
-  const handleSubmitInquiry = () => {
+  const handleSubmitInquiry = async () => {
     const submissionData = {
       ...formData,
       partName: formData.partName.trim(),
@@ -310,55 +311,40 @@ export default function InquiryFormPage() {
     setSubmitError('');
     setIsSubmitting(true);
 
-    setTimeout(() => {
-      try {
-        const localInquiriesKey = 'global_goods_inquiries';
-        const existingRaw = localStorage.getItem(localInquiriesKey);
-        const list = existingRaw ? JSON.parse(existingRaw) : [];
+    try {
+      const mappedCategory = submissionData.productCategory || 'General Mechanics';
 
-        const mappedCategory = submissionData.productCategory || 'General Mechanics';
+      const newRecord = {
+        id: refId,
+        createdAt: new Date().toISOString(),
+        status: 'new',
+        priority: submissionData.urgency === 'asap' ? 'urgent' : (submissionData.urgency === 'within_week' ? 'medium' : 'low'),
+        category: mappedCategory,
+        vehicleMake: submissionData.vehicleMake,
+        vehicleModel: submissionData.vehicleModel,
+        vehicleYear: parseInt(submissionData.vehicleYear, 10) || 2024,
+        vehicleEngine: submissionData.chassisNumber ? 'Match (chassis)' : 'Standard Trim',
+        partName: submissionData.partName,
+        partNumber: submissionData.partNumber || 'Auto-Sourced',
+        quantity: parseInt(submissionData.quantity, 10) || 1,
+        urgency: submissionData.urgency,
+        notes: submissionData.partDescription,
+        customerName: `${submissionData.firstName} ${submissionData.lastName}`,
+        customerEmail: submissionData.email,
+        customerPhone: submissionData.contactNumber,
+        contactMethod: submissionData.contactMethod,
+        company: submissionData.companyName || null,
+        images: imagePreviews,
+      };
 
-        const newRecord = {
-          id: refId,
-          createdAt: new Date().toISOString(),
-          status: 'new',
-          priority: submissionData.urgency === 'asap' ? 'urgent' : (submissionData.urgency === 'within_week' ? 'medium' : 'low'),
-          category: mappedCategory,
-          vehicleMake: submissionData.vehicleMake,
-          vehicleModel: submissionData.vehicleModel,
-          vehicleYear: parseInt(submissionData.vehicleYear, 10) || 2024,
-          vehicleEngine: submissionData.chassisNumber ? 'Match (chassis)' : 'Standard Trim',
-          partName: submissionData.partName,
-          partNumber: submissionData.partNumber || 'Auto-Sourced',
-          quantity: parseInt(submissionData.quantity, 10) || 1,
-          urgency: submissionData.urgency,
-          notes: submissionData.partDescription,
-          customerName: `${submissionData.firstName} ${submissionData.lastName}`,
-          customerEmail: submissionData.email,
-          customerPhone: submissionData.contactNumber,
-          contactMethod: submissionData.contactMethod,
-          company: submissionData.companyName || null,
-          images: imagePreviews,
-        };
-
-        list.unshift(newRecord);
-
-        try {
-          localStorage.setItem(localInquiriesKey, JSON.stringify(list));
-        } catch (storageError) {
-          const recordWithoutImages = { ...newRecord, images: [] };
-          const listWithoutImages = [recordWithoutImages, ...list.slice(1)];
-          localStorage.setItem(localInquiriesKey, JSON.stringify(listWithoutImages));
-        }
-
-        setIsSubmitting(false);
-        setStep('success');
-      } catch (error) {
-        console.error('Failed to submit inquiry:', error);
-        setIsSubmitting(false);
-        setSubmitError('Something went wrong while saving your inquiry. Please try again.');
-      }
-    }, 800);
+      await createInquiry(newRecord);
+      setStep('success');
+    } catch (error) {
+      console.error('Failed to submit inquiry:', error);
+      setSubmitError(error?.message || 'Something went wrong while saving your inquiry. Please try again.');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   // Master reset state back to step 1
